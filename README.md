@@ -20,35 +20,13 @@ By maintaining the old project, I can present a clear progression in my skill se
 - **Fundamentals First**: The older portfolio showcases a solid understanding of core web technologies.
 - **Modern Proficiency**: The new portfolio demonstrates expertise in ReactJS and NextJS, including modern development practices.
 
-## How to Explore the Project
-
-### Running Locally
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/your-username/portfolio.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd portfolio
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-5. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
 ### Legacy Portfolio
 
-You can also explore the legacy portfolio to see how I started. Navigate to the `/legacy` directory and open the `index.html` file in any modern browser.
+You can also explore the legacy portfolio to see how I started. Live Legacy demo here: **[Live Legacy Portfolio](https://msytc.vercel.app)**
 
 ## Interactive Walkthrough
 
-Want a quick preview? Check out the live demo here: **[Live Portfolio](#)** (Replace `#` with the deployed link).
+Want a quick preview? Check out the live demo here: **[Live Portfolio](https://msytc.vercel.app)**
 
 Explore:
 
