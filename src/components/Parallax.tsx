@@ -1,65 +1,44 @@
-import { useState, useEffect } from "react";
-
 const Parallax = () => {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <div className="relative h-[200vh] overflow-hidden">
-      {/* Background Layer - moves slowest */}
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Section 1: Parallax Background */}
       <div
-        className="fixed inset-0 bg-darkGold z-0"
+        className="h-screen bg-fixed bg-cover bg-center"
         style={{
-          transform: `translateY(${scrollY * 0.5}px)`,
-          backgroundImage: "url(/philipp-dusel--Mbfhs0u4YQ-unsplash.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-
-      {/* Midground Layer - medium speed */}
-      <div
-        className="fixed inset-0 z-10"
-        style={{
-          transform: `translateY(${scrollY * 0.3}px)`,
-          backgroundImage: "url(/moritz-lange-_x_y-csW60s-unsplash.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      {/* /egor-litvinov-rFUWuxeJqeM-unsplash.jpg */}
-      {/* Foreground Layer - moves faster */}
-      <div
-        className="fixed inset-0 z-20"
-        style={{
-          transform: `translateY(${scrollY * 0.1}px)`,
-          backgroundImage: "url(/philipp-dusel--Mbfhs0u4YQ-unsplash.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-
-      {/* Content Section */}
-      <div className="relative z-30 pt-[100vh] px-4">
-        <div className="max-w-2xl mx-auto bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
-          <h1 className="text-4xl font-bold mb-4">Parallax Effect</h1>
-          <p className="text-gray-700 mb-4">
-            Scroll ke bawah untuk melihat efek parallax...
-          </p>
-          {/* Tambahkan lebih banyak konten di sini */}
-          <div className="h-screen"></div>
-          <p className="text-gray-700">
-            Lanjutan konten dengan efek parallax...
-          </p>
+          backgroundImage: "url('/christopher-gower-m_HRfLhgABo-unsplash.jpg')",
+        }}>
+        <div className="flex items-center justify-center h-full bg-black/50">
+          <h1 className="text-6xl font-bold text-white">
+            Welcome to My Portfolio
+          </h1>
         </div>
+      </div>
+
+      {/* Section 2: Content */}
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p className="text-2xl text-gray-800 max-w-2xl text-center">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel
+          purus eget nisi tincidunt tincidunt. Sed euismod, nisl nec aliquam
+          aliquet, nunc nisl aliquam nunc, nec aliquam nisl nunc nec nisl.
+        </p>
+      </div>
+
+      {/* Section 3: Parallax Background */}
+      <div
+        className="h-screen bg-fixed bg-cover bg-center"
+        style={{ backgroundImage: "url('/darkness.webp')" }}>
+        <div className="flex items-center justify-center h-full bg-black/50">
+          <h2 className="text-5xl font-bold text-white">Explore More</h2>
+        </div>
+      </div>
+
+      {/* Section 4: Content */}
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p className="text-2xl text-gray-800 max-w-2xl text-center">
+          Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis
+          euismod malesuada. Nulla facilisi. Proin ac nisi nec lorem tincidunt
+          tincidunt.
+        </p>
       </div>
     </div>
   );

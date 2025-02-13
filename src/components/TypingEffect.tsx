@@ -27,8 +27,8 @@ export default function TypingEffect({ strings, ...props }: Props) {
   }, [strings]);
 
   return (
-    <section {...props}>
+    <div {...props}>
       <span ref={typedRef}></span>
-    </section>
+    </div>
   );
 }

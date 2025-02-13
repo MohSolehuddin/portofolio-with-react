@@ -1,13 +1,11 @@
 "use client";
+import ComplexParallaxEffect from "@/components/ParallaxFrammer";
 // import Parallax from "@/components/Parallax";
-import ParallaxEffect from "@/components/ParallaxFrammer";
 
 export default function page() {
   return (
     <div className="w-full h-full">
-      {/* <Parallax /> */}
-      <ParallaxEffect />
-      <ParallaxEffect />
+      <ComplexParallaxEffect />
     </div>
   );
 }
