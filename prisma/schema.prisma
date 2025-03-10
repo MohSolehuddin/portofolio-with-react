@@ -55,3 +55,21 @@ model VerificationToken {
   @@unique([email, token])
   @@map("verification_tokens")
 }
+
+model Portfolio {
+  id String @id @default(uuid())
+  name String
+  description String
+  private Boolean @default(false)
+  linkRepo String?
+  image String?
+  started DateTime
+  ended DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model HistoryOfUpdatingPortfolio {
+  id String @id @default(uuid())
+  lastUpdate DateTime
+}
