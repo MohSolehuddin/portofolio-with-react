@@ -3,14 +3,12 @@
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import axios from "axios";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import TypingEffect from "./TypingEffect";
 
 export default function ComplexParallaxEffect() {
-  const { theme } = useTheme();
   const [projects, setProjects] = useState<z.infer<typeof PortfolioSchema>[]>(
     []
   );
@@ -40,12 +38,6 @@ export default function ComplexParallaxEffect() {
   const textY1 = useTransform(scrollY, [0, 700], [0, -200]);
   const textY2 = useTransform(scrollY, [0, 800], [0, -400]);
   const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
-
-  const backgroundImage =
-    theme === "dark"
-      ? "url('/liquid-cheese-dark.svg')"
-      : "url('/liquid-cheese-light.svg')";
-
   return (
     <div
       className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-center"
