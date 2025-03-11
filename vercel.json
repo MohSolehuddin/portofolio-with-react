@@ -1,6 +1,5 @@
 {
   "installCommand": "pnpm install --production=false",
   "buildCommand": "pnpm run build",
-  "devCommand": "pnpm run dev",
-  "startCommand": "pnpm run start"
+  "devCommand": "pnpm run dev"
 }
