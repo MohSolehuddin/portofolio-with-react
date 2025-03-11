@@ -43,8 +43,8 @@ export default function ComplexParallaxEffect() {
 
   const backgroundImage =
     theme === "dark"
-      ? "url('/liquid-cheese(2).svg')"
-      : "url('/liquid-cheese(3).svg')";
+      ? "url('/liquid-cheese-dark.svg')"
+      : "url('/liquid-cheese-light.svg')";
 
   return (
     <div
