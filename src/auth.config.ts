@@ -2,6 +2,7 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import { getAllowedEmail } from "./data/allowedEmail";
 import { getUserByEmail } from "./data/user";
 import { LoginSchema } from "./lib/schema/loginSchema";
 import { verifyPassword } from "./lib/utils/password";
@@ -24,7 +25,12 @@ export default {
       async authorize(credentials) {
         const validateFields = LoginSchema.safeParse(credentials);
         if (!validateFields.success) return null;
+
         const { email, password } = validateFields.data;
+
+        const emailExist = await getAllowedEmail(email);
+        if (!emailExist) return null;
+
         const user = await getUserByEmail(email);
         const isValid = await verifyPassword(password, user?.password ?? "");
         if (isValid) {
