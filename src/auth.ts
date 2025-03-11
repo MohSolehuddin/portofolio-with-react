@@ -3,6 +3,7 @@ import { db } from "@/server/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
+import { getAllowedEmail } from "./data/allowedEmail";
 import { getUserById, makeEmailIsVerified } from "./data/user";
 import { JWT_EXPIRATION_IN_HOURS } from "./lib/constants";
 
@@ -23,6 +24,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
   callbacks: {
+    async signIn({ user }) {
+      const emailExist = await getAllowedEmail(user.email ?? "");
+      if (!emailExist) return false;
+      return true;
+    },
     async jwt({ token, trigger, session }) {
       if (!token.sub) return token;
       if (trigger && trigger !== "update") {
