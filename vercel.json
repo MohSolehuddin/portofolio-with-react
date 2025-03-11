@@ -1,8 +1,8 @@
 {
   "build": {
-    "installCommand": "npm install",
-    "buildCommand": "npm run build",
-    "devCommand": "next dev --turbopack",
-    "startCommand": "next start"
+    "installCommand": "pnpm install --production=false",
+    "buildCommand": "pnpm run build",
+    "devCommand": "pnpm run dev",
+    "startCommand": "pnpm run start"
   }
 }
