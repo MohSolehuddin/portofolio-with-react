@@ -48,9 +48,9 @@ export default function ComplexParallaxEffect() {
 
   return (
     <div
-      className="relative min-h-screen overflow-hidden bg-background px-40"
+      className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-center"
       style={{
-        backgroundImage,
+        // backgroundImage,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",

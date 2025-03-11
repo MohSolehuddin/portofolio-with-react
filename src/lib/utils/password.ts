@@ -1,10 +1,10 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcrypt-edge";
 export const hashPassword = async (password: string) => {
-  return await bcrypt.hash(password, 10);
+  return bcrypt.hashSync(password, 10);
 };
 export const verifyPassword = async (
   password: string,
   hashedPassword: string
 ) => {
-  return await bcrypt.compare(password, hashedPassword);
+  return bcrypt.compareSync(password, hashedPassword);
 };
