@@ -50,19 +50,17 @@ export async function GET(req: Request) {
 
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   console.log(token);
-
+  const data = projects.data.map((project) => ({
+    id: project.id.toString(),
+    name: project.name,
+    description: project.description,
+    private: project.private,
+    linkRepo: project.html_url,
+    image: project.owner.avatar_url,
+    started: new Date(project.created_at as string),
+    ended: new Date(project.updated_at as string),
+  }));
   (async () => {
-    const data = projects.data.map((project) => ({
-      id: project.id.toString(),
-      name: project.name,
-      description: project.description,
-      private: project.private,
-      linkRepo: project.html_url,
-      image: project.owner.avatar_url,
-      started: new Date(project.created_at as string),
-      ended: new Date(project.updated_at as string),
-    }));
-
     for (const project of data) {
       await db.portfolio.upsert({
         where: { id: project.id },
@@ -91,7 +89,7 @@ export async function GET(req: Request) {
     await upsertHistoryOfUpdatingPortfolio();
   })();
 
-  return Response.json({ data: projects.data }, { status: 200 });
+  return Response.json({ data }, { status: 200 });
 }
 
 export async function POST(req: Request) {
