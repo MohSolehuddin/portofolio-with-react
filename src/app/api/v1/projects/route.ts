@@ -1,4 +1,14 @@
+import {
+  getLastUpdate,
+  upsertHistoryOfUpdatingPortfolio,
+} from "@/data/historyOfUpdatingPortfolio";
+import {
+  createPortfolio,
+  deletePortfolio,
+  updatePortfolio,
+} from "@/data/portfolio";
 import { github } from "@/lib/github";
+import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import { db } from "@/server/db";
 import { getToken } from "next-auth/jwt";
 
@@ -25,12 +35,7 @@ export async function GET(req: Request) {
     direction: "desc",
   });
 
-  const lastUpdate = await db.historyOfUpdatingPortfolio.findMany({
-    orderBy: {
-      lastUpdate: "desc",
-    },
-    take: 1,
-  });
+  const lastUpdate = await getLastUpdate();
 
   if (lastUpdate.length > 0) {
     const lastUpdateDate = new Date(lastUpdate[0].lastUpdate);
@@ -83,17 +88,44 @@ export async function GET(req: Request) {
       });
     }
 
-    await db.historyOfUpdatingPortfolio.upsert({
-      where: { id: "1" },
-      update: {
-        lastUpdate: new Date(),
-      },
-      create: {
-        id: "1",
-        lastUpdate: new Date(),
-      },
-    });
+    await upsertHistoryOfUpdatingPortfolio();
   })();
 
   return Response.json({ data: projects.data }, { status: 200 });
+}
+
+export async function POST(req: Request) {
+  const data = await req.json();
+  const validatedData = PortfolioSchema.safeParse(data);
+  if (!validatedData.success)
+    return Response.json(validatedData.error, { status: 400 });
+
+  const createdPortfolio = await createPortfolio(validatedData.data);
+  return Response.json({ data: createdPortfolio }, { status: 200 });
+}
+
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) return Response.json({ message: "id is required" }, { status: 400 });
+
+  const deletedPortfolio = await deletePortfolio(id);
+  return Response.json({ data: deletedPortfolio }, { status: 200 });
+}
+export async function PUT(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) return Response.json({ message: "id is required" }, { status: 400 });
+
+  const data = await req.json();
+
+  const validatedData = PortfolioSchema.safeParse(data);
+  if (!validatedData.success)
+    return Response.json(validatedData.error, { status: 400 });
+
+  const updatedPortfolio = await updatePortfolio(id, {
+    ...validatedData.data,
+  });
+
+  return Response.json({ data: updatedPortfolio }, { status: 200 });
 }
