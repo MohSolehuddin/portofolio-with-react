@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs16.x"
+    },
+    "api/**/*.js": {
+      "runtime": "nodejs16.x"
+    },
+    "app/server/**/*.ts": {
+      "runtime": "nodejs16.x"
+    },
+    "app/server/**/*.js": {
+      "runtime": "nodejs16.x"
+    }
+  }
+}
