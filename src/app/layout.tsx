@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@/components/provider/ThemeProvider";
+import { ModeToggle } from "@/components/toggle/ModeToggle";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -26,7 +28,12 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
+        <ThemeProvider>
+          <section className="absolute top-4 right-4 z-50">
+            <ModeToggle />
+          </section>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
