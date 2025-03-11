@@ -1,8 +1,6 @@
 {
-  "build": {
-    "installCommand": "pnpm install --production=false",
-    "buildCommand": "pnpm run build",
-    "devCommand": "pnpm run dev",
-    "startCommand": "pnpm run start"
-  }
+  "installCommand": "pnpm install --production=false",
+  "buildCommand": "pnpm run build",
+  "devCommand": "pnpm run dev",
+  "startCommand": "pnpm run start"
 }
