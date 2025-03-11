@@ -1,7 +1,7 @@
 {
   "build": {
-    "installCommand": "npm install && prisma generate",
-    "buildCommand": "next build",
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
     "devCommand": "next dev --turbopack",
     "startCommand": "next start"
   }
