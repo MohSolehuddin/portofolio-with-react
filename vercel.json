@@ -2,14 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "next.config.js",
-      "use": "@vercel/next"
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "runtime": "nodejs"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/_next/static/$1"
+      "src": "/api/.*",
+      "dest": "/api",
+      "runtime": "nodejs"
     }
   ]
 }
