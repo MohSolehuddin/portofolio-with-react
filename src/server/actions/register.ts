@@ -1,5 +1,6 @@
 "use server";
 
+import { getAllowedEmail } from "@/data/allowedEmail";
 import { registerInputSchema } from "@/lib/schema/registerSchema";
 import senEmailVerification from "@/lib/sendEmailVerification";
 import { generateVerificationToken } from "@/lib/token";
@@ -13,13 +14,12 @@ export default async function register(
   if (!validated.success) return { error: validated.error.message };
   const { name, email, password } = validated.data;
   try {
-    const userExist = await db.user.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (userExist && userExist.email)
-      return { error: "Email is already exist" };
+    const emailExist = await getAllowedEmail(email);
+    if (!emailExist)
+      return {
+        error: "Email is not allowed to register, Please contact admin",
+      };
+
     const hashedPassword = await hashPassword(password);
 
     await db.user.create({
