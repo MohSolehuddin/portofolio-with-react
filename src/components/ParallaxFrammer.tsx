@@ -37,7 +37,7 @@ export default function ComplexParallaxEffect() {
   const { scrollY } = useScroll();
 
   const imgY = useTransform(scrollY, [0, 500], [0, -100]);
-  const textY1 = useTransform(scrollY, [0, 500], [0, -200]);
+  const textY1 = useTransform(scrollY, [0, 700], [0, -200]);
   const textY2 = useTransform(scrollY, [0, 800], [0, -400]);
   const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
 
@@ -78,18 +78,23 @@ export default function ComplexParallaxEffect() {
           style={{ y: textY1, opacity: textOpacity }}
           className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic px-6 py-4 rounded-xl">
           <motion.h1
-            className="text-5xl font-bold dark:text-light text-navy mb-10 drop-shadow-lg shadow-accent"
+            className="text-5xl font-bold dark:text-light text-navy drop-shadow-lg shadow-accent"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.8 }}>
             Moh Solehuddin
           </motion.h1>
           <motion.p
-            className="text-xl dark:text-light/90 text-navy/90"
+            className="text-xl dark:text-light/90 text-navy/90 mt-11"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1 }}>
-            Scroll to explore
+            👋 Hello, I&apos;m Moh Solehuddin! I’m a passionate Full-Stack
+            Developer with a focus on Java, Spring Boot, ReactJS, and React
+            Native. I am driven by the idea of creating efficient and scalable
+            applications, and I enjoy solving complex problems through
+            technology. I am continually expanding my skill set and exploring
+            new technologies to stay at the forefront of development trends.
           </motion.p>
         </motion.div>
 
