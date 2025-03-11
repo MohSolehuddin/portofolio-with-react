@@ -4,19 +4,12 @@
     {
       "src": "next.config.js",
       "use": "@vercel/next"
-    },
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["prisma/**", "node_modules/.prisma/**"]
-      }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/server.js"
+      "dest": "/_next/static/$1"
     }
   ]
 }
