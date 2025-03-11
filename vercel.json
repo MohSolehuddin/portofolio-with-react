@@ -2,11 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
+      "src": "next.config.js",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "server.js",
       "use": "@vercel/node",
       "config": {
-        "runtime": "nodejs"
+        "runtime": "nodejs",
+        "includeFiles": ["prisma/**", "node_modules/.prisma/**"]
       }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/.next/$1"
     }
   ]
 }
