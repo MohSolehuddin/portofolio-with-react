@@ -1,16 +1,22 @@
 {
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs16.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@vercel/next"
     },
-    "api/**/*.js": {
-      "runtime": "nodejs16.x"
-    },
-    "app/server/**/*.ts": {
-      "runtime": "nodejs16.x"
-    },
-    "app/server/**/*.js": {
-      "runtime": "nodejs16.x"
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["prisma/**", "node_modules/.prisma/**"]
+      }
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
 }
