@@ -9,6 +9,7 @@ import { JWT_EXPIRATION_IN_HOURS } from "./lib/constants";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  trustHost: true,
   adapter: PrismaAdapter(db),
   session: {
     strategy: "jwt",

@@ -34,7 +34,7 @@ export default async function register(
     if (generatedVerifyToken?.status === "error")
       return { error: generatedVerifyToken.message };
 
-    const linkVerification = `http://localhost:3000/auth/verify-email?token=${generatedVerifyToken.data?.token}`;
+    const linkVerification = `${process.env.DOMAIN}/auth/verify-email?token=${generatedVerifyToken.data?.token}`;
     await senEmailVerification(email, linkVerification, name);
     return {
       message:
