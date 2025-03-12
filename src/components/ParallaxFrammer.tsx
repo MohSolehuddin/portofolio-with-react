@@ -28,10 +28,6 @@ export default function ComplexParallaxEffect() {
     fetchProjects();
   }, []);
 
-  useEffect(() => {
-    console.log(projects);
-  }, [projects]);
-
   const { scrollY } = useScroll();
 
   const imgY = useTransform(scrollY, [0, 500], [0, -100]);
@@ -39,14 +35,7 @@ export default function ComplexParallaxEffect() {
   const textY2 = useTransform(scrollY, [0, 800], [0, -400]);
   const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
   return (
-    <div
-      className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-center"
-      style={{
-        // backgroundImage,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}>
+    <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-center">
       <motion.h1
         className="fixed -left-52 top-1/2 -translate-y-1/2 font-bold tracking-wider dark:text-light/20 text-navy/20 text-9xl whitespace-nowrap z-50 shadow-neumorphic"
         initial={{ opacity: 0, x: -50, rotate: 90 }}

@@ -6,22 +6,21 @@ import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import { verifyToken } from "@/server/actions/verifyToken";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(5); // Timer countdown (in seconds)
+  const [countdown, setCountdown] = useState(5);
   const router = useRouter();
 
-  const checkToken = async () => {
+  const checkToken = useCallback(async () => {
     if (!token) return;
     const response = await verifyToken(token);
     if (response.success) {
       setSuccess(response.success);
-      // Start countdown timer
       const interval = setInterval(() => {
         setCountdown((prev) => {
           if (prev === 1) {
@@ -35,14 +34,13 @@ export default function Page() {
     if (response.error) {
       setError(response.error);
     }
-  };
+  }, [token, router]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      console.log("Token:", token); // Log token for debugging
       checkToken();
     }
-  }, [token]);
+  }, [token, checkToken]);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
