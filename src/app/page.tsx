@@ -1,16 +1,35 @@
 "use client";
 
+import Aurora from "@/components/Aurora/Aurora";
 import Loading from "@/components/Loading";
+import Magnet from "@/components/Magnet/Magnet";
+import SplashCursor from "@/components/SplashCursor/SplashCursor";
 import TypingEffect from "@/components/TypingEffect";
 import { Button } from "@/components/ui/button";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import axios from "axios";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
 export default function Page() {
+  const { theme } = useTheme();
+
+  const [colorStops, setColorStops] = useState<string[]>([
+    "#09122C",
+    "#074799",
+    "#010e1f",
+  ]);
+  useEffect(() => {
+    if (theme == "dark") {
+      setColorStops(["#09122C", "#074799", "#010e1f"]);
+      return;
+    }
+    setColorStops(["#fff", "#074799", "#fbfbfb"]);
+  }, [theme]);
+
   const [projects, setProjects] = useState<
     z.infer<typeof PortfolioSchema>[] | null
   >(null);
@@ -34,7 +53,12 @@ export default function Page() {
   const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-top">
+    // <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-top">
+    <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-light dark:bg-dark bg-cover bg-top">
+      <section className="absolute w-screen h-screen z-0 top-0 left-0">
+        <Aurora colorStops={colorStops} />
+      </section>
+      <SplashCursor />
       <motion.h1
         className="fixed -left-52 top-1/2 -mt-16 -translate-y-1/2 font-bold tracking-wider dark:text-light/20 text-navy/20 text-9xl whitespace-nowrap z-50 shadow-neumorphic"
         initial={{ opacity: 0, x: -50, rotate: 90 }}
@@ -44,6 +68,9 @@ export default function Page() {
       </motion.h1>
 
       <div className="relative z-10 h-screen flex flex-col items-center justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
+        {/* <section className="absolute h-96 w-96">
+          <Orb />
+        </section> */}
         <motion.div
           style={{ y: heroSectionY }}
           initial={{ opacity: 0, x: -60 }}
@@ -101,12 +128,14 @@ export default function Page() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}>
-            <Button>Download CV</Button>
+            <Magnet>
+              <Button>Download CV</Button>
+            </Magnet>
           </motion.section>
         </motion.div>
       </div>
 
-      <div className="min-h-screen">
+      <div className="min-h-screen z-40">
         {!projects ? (
           <Loading />
         ) : (
