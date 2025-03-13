@@ -46,7 +46,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <section className="absolute top-4 right-4 z-50">
+          <section className="absolute top-6 right-6 z-50">
             <ModeToggle />
           </section>
           {children}
