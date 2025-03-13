@@ -68,6 +68,9 @@ importers:
       octokit:
         specifier: ^4.1.2
         version: 4.1.2
+      ogl:
+        specifier: ^1.0.11
+        version: 1.0.11
       otplib:
         specifier: ^12.0.1
         version: 12.0.1
@@ -2269,6 +2272,9 @@ packages:
   octokit@4.1.2:
     resolution: {integrity: sha512-0kcTxJOK3yQrJsRb8wKa28hlTze4QOz4sLuUnfXXnhboDhFKgv8LxS86tFwbsafDW9JZ08ByuVAE8kQbYJIZkA==}
     engines: {node: '>= 18'}
+
+  ogl@1.0.11:
+    resolution: {integrity: sha512-kUpC154AFfxi16pmZUK4jk3J+8zxwTWGPo03EoYA8QPbzikHoaC82n6pNTbd+oEaJonaE8aPWBlX7ad9zrqLsA==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -5136,6 +5142,8 @@ snapshots:
       '@octokit/plugin-throttling': 9.4.0(@octokit/core@6.1.4)
       '@octokit/request-error': 6.1.7
       '@octokit/types': 13.8.0
+
+  ogl@1.0.11: {}
 
   optionator@0.9.4:
     dependencies:
