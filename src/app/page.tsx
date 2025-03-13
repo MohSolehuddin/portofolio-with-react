@@ -1,9 +1,11 @@
 "use client";
 
 import Aurora from "@/components/Aurora/Aurora";
+import DecryptedText from "@/components/DecryptedText/DecryptedText";
 import Loading from "@/components/Loading";
 import Magnet from "@/components/Magnet/Magnet";
 import SplashCursor from "@/components/SplashCursor/SplashCursor";
+import SplitText from "@/components/SplitText/SplitText";
 import TypingEffect from "@/components/TypingEffect";
 import { Button } from "@/components/ui/button";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
@@ -59,13 +61,18 @@ export default function Page() {
         <Aurora colorStops={colorStops} />
       </section>
       <SplashCursor />
-      <motion.h1
+      <motion.div
         className="fixed -left-52 top-1/2 -mt-16 -translate-y-1/2 font-bold tracking-wider dark:text-light/20 text-navy/20 text-9xl whitespace-nowrap z-50 shadow-neumorphic"
         initial={{ opacity: 0, x: -50, rotate: 90 }}
         animate={{ opacity: 1, x: 0, rotate: 90 }}
         transition={{ duration: 1, delay: 0.5 }}>
-        Portfolio
-      </motion.h1>
+        <DecryptedText
+          text="Portfolio"
+          speed={100}
+          animateOn="view"
+          delay={1000}
+        />
+      </motion.div>
 
       <div className="relative z-10 h-screen flex flex-col items-center justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
         {/* <section className="absolute h-96 w-96">
@@ -87,13 +94,13 @@ export default function Page() {
 
         <motion.div
           style={{ y: heroSectionY, opacity: textOpacity }}
-          className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic px-6 py-4 rounded-xl dark:bg-black/20 bg-light/20">
+          className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic p-12 rounded-xl dark:bg-black/20 bg-light/20">
           <motion.h1
             className="text-5xl font-bold dark:text-light text-navy drop-shadow-lg shadow-accent"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}>
-            Moh Solehuddin
+            <SplitText text="Moh Solehuddin" />
           </motion.h1>
           <motion.div
             className="relative flex flex-col items-center xl:items-start"
@@ -110,21 +117,35 @@ export default function Page() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}>
-            <p>👋 Hello, I&apos;m Moh Solehuddin!</p>
-            <p>
-              I’m a passionate Full-Stack Developer with a focus on Java, Spring
+            <DecryptedText
+              text="👋 Hello, I'm Moh Solehuddin!"
+              animateOn="view"
+              delay={1000}
+              speed={30}
+              revealDirection="center"
+            />
+            <DecryptedText
+              text="I’m a passionate Full-Stack Developer with a focus on Java, Spring
               Boot, ReactJS, and React Native. I am driven by the idea of
               creating efficient and scalable applications, and I enjoy solving
-              complex problems through technology.
-            </p>
-            <br />
-            <p>
-              I am continually expanding my skill set and exploring new
+              complex problems through technology."
+              revealDirection="center"
+              animateOn="view"
+              speed={50}
+              delay={1000}
+            />
+            <br className="mb-6" />
+            <DecryptedText
+              text="I am continually expanding my skill set and exploring new
               technologies to stay at the forefront of development trends.
-            </p>
+            "
+              animateOn="view"
+              speed={100}
+              delay={1000}
+            />
           </motion.div>
-
           <motion.section
+            className="mt-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}>
