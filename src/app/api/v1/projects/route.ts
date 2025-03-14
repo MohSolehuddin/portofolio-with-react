@@ -10,7 +10,11 @@ import {
 import { github } from "@/lib/github";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import { db } from "@/server/db";
-import { getToken } from "next-auth/jwt";
+import {
+  PortfolioGithubResponse,
+  portfolioMapper,
+} from "@/server/response-mapper/portfolioMapper";
+// import { getToken } from "next-auth/jwt";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -34,6 +38,9 @@ export async function GET(req: Request) {
     sort: "created",
     direction: "desc",
   });
+  console.log("Response structure", projects.data[0]);
+
+  const data = portfolioMapper(projects.data as PortfolioGithubResponse[]);
 
   const lastUpdate = await getLastUpdate();
 
@@ -44,22 +51,11 @@ export async function GET(req: Request) {
     const hoursDiff = timeDiff / (1000 * 3600);
 
     if (hoursDiff < 24) {
-      return Response.json({ data: projects.data }, { status: 200 });
+      return Response.json({ data }, { status: 200 });
     }
   }
 
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  console.log(token);
-  const data = projects.data.map((project) => ({
-    id: project.id.toString(),
-    name: project.name,
-    description: project.description,
-    private: project.private,
-    linkRepo: project.html_url,
-    image: project.owner.avatar_url,
-    started: new Date(project.created_at as string),
-    ended: new Date(project.updated_at as string),
-  }));
+  // const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   (async () => {
     for (const project of data) {
       await db.portfolio.upsert({
@@ -70,6 +66,7 @@ export async function GET(req: Request) {
           private: project.private,
           linkRepo: project.linkRepo,
           image: project.image,
+          isShow: !project.private,
           ended: project.ended,
           updatedAt: new Date(),
         },
