@@ -6,6 +6,9 @@ import TypingEffect from "@/components/TypingEffect";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import ProjectCompleted from "./ProjectCompleted";
+import ProjectOngoing from "./ProjectOngoing";
+import YearOfExperience from "./YearOfExperience";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
@@ -60,6 +63,8 @@ export default function HeroSection() {
             speed={30}
             revealDirection="center"
           />
+          <br className="mb-6" />
+
           <DecryptedText
             text="I’m a passionate Full-Stack Developer with a focus on Java, Spring
               Boot, ReactJS, and React Native. I am driven by the idea of
@@ -81,14 +86,17 @@ export default function HeroSection() {
           />
         </motion.div>
         <motion.section
-          className="mt-6"
+          className="mt-6 flex gap-12 mb-6 bg-navy/50 rounded-xl p-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6 }}>
-          <Magnet>
-            <Button>Download CV</Button>
-          </Magnet>
+          <YearOfExperience />
+          <ProjectCompleted />
+          <ProjectOngoing />
         </motion.section>
+        <Magnet>
+          <Button>Download CV</Button>
+        </Magnet>
       </motion.div>
     </div>
   );
