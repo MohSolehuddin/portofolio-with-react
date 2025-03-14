@@ -16,3 +16,4 @@ export const colors = {
   danger: "#D72638",
   darkGold: "#B8860B",
 };
+export const DATE_OF_STARTING_LEARNING_CODING = "19 September 2021";
