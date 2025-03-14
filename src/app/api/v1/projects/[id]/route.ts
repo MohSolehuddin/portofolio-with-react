@@ -2,9 +2,9 @@ import { db } from "@/server/db";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   const portfolio = await db.portfolio.findUnique({
     where: { id },
