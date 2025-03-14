@@ -104,8 +104,9 @@ void main() {
   vec3 auroraColor = intensity * rampColor;
   
   fragColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
-}
-`;
+  }
+  `;
+// fragColor = vec4(auroraColor, max(auroraAlpha, 0.1));
 
 interface AuroraProps {
   colorStops?: string[];
