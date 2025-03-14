@@ -4,6 +4,7 @@ import Aurora from "@/components/Aurora/Aurora";
 import DecryptedText from "@/components/DecryptedText/DecryptedText";
 import Loading from "@/components/Loading";
 import Magnet from "@/components/Magnet/Magnet";
+import Product from "@/components/product/Product";
 import SplashCursor from "@/components/SplashCursor/SplashCursor";
 import SplitText from "@/components/SplitText/SplitText";
 import TypingEffect from "@/components/TypingEffect";
@@ -29,7 +30,7 @@ export default function Page() {
       setColorStops(["#09122C", "#074799", "#010e1f"]);
       return;
     }
-    setColorStops(["#fff", "#074799", "#fbfbfb"]);
+    setColorStops(["#fff", "#fff", "#fbfbfb"]);
   }, [theme]);
 
   const [projects, setProjects] = useState<
@@ -57,10 +58,19 @@ export default function Page() {
   return (
     // <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-[url('/liquid-cheese-light.svg')] dark:bg-[url('/liquid-cheese-dark.svg')] bg-cover bg-top">
     <div className="relative min-h-screen overflow-hidden bg-background px-40 bg-light dark:bg-dark bg-cover bg-top">
-      <section className="absolute w-screen h-screen z-0 top-0 left-0">
-        <Aurora colorStops={colorStops} />
+      <section className="absolute w-screen h-screen z-0 top-0 left-0 -mt-12">
+        {theme == "dark" ? (
+          <Aurora colorStops={colorStops} />
+        ) : (
+          <Aurora
+            colorStops={colorStops}
+            amplitude={0.3}
+            blend={0.9}
+            speed={1}
+            time={1000}
+          />
+        )}
       </section>
-      <SplashCursor />
       <motion.div
         className="fixed -left-52 top-1/2 -mt-16 -translate-y-1/2 font-bold tracking-wider dark:text-light/20 text-navy/20 text-9xl whitespace-nowrap z-50 shadow-neumorphic"
         initial={{ opacity: 0, x: -50, rotate: 90 }}
@@ -71,13 +81,12 @@ export default function Page() {
           speed={100}
           animateOn="view"
           delay={1000}
+          className="text-navy/20 dark:text-light/20"
         />
       </motion.div>
 
       <div className="relative z-10 h-screen flex flex-col items-center justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
-        {/* <section className="absolute h-96 w-96">
-          <Orb />
-        </section> */}
+        <SplashCursor />
         <motion.div
           style={{ y: heroSectionY }}
           initial={{ opacity: 0, x: -60 }}
@@ -94,7 +103,7 @@ export default function Page() {
 
         <motion.div
           style={{ y: heroSectionY, opacity: textOpacity }}
-          className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic p-12 rounded-xl dark:bg-black/20 bg-light/20">
+          className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic p-12 rounded-xl dark:bg-black/20 bg-light/30">
           <motion.h1
             className="text-5xl font-bold dark:text-light text-navy drop-shadow-lg shadow-accent"
             initial={{ opacity: 0, y: 30 }}
@@ -156,19 +165,25 @@ export default function Page() {
         </motion.div>
       </div>
 
-      <div className="min-h-screen z-40">
+      <section className="min-h-screen z-40 w-full flex flex-wrap justify-center items-center gap-6">
         {!projects ? (
           <Loading />
         ) : (
           <>
             {projects.map((project) => (
-              <p key={project.id} className="text-lg text-navy dark:text-light">
-                {project.name}
-              </p>
+              <Product
+                key={project.id}
+                name={project.name}
+                description={project.description}
+                linkRepo={project.linkRepo}
+                image={project.image}
+                started={project.started}
+                ended={project.ended}
+              />
             ))}
           </>
         )}
-      </div>
+      </section>
     </div>
   );
 }
