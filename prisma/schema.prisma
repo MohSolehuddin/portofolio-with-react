@@ -68,6 +68,7 @@ model Portfolio {
   private Boolean @default(false)
   linkRepo String?
   image String?
+  isShow Boolean @default(true)
   started DateTime
   ended DateTime
   createdAt DateTime @default(now())
