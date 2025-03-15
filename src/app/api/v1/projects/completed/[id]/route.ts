@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 
-export async function GET(
+export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
