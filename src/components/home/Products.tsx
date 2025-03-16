@@ -15,7 +15,6 @@ export default function Products() {
     const fetchProjects = async () => {
       try {
         const response = await axios.get("/api/v1/projects?page=1&limit=100");
-        console.log(response.data);
         setProjects(response.data.data);
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -25,24 +24,29 @@ export default function Products() {
   }, []);
 
   return (
-    <section className="min-h-screen z-40 w-full flex flex-wrap justify-center items-center gap-6">
-      {!projects ? (
-        <Loading />
-      ) : (
-        <>
-          {projects.map((project) => (
-            <Product
-              key={project.id}
-              name={project.name}
-              description={project.description}
-              linkRepo={project.linkRepo}
-              image={project.image}
-              started={project.started}
-              ended={project.ended}
-            />
-          ))}
-        </>
-      )}
-    </section>
+    <>
+      <h3 className="text-5xl text-light mb-12 font-extrabold text-center">
+        My Recent Projects
+      </h3>
+      <section className="min-h-screen z-40 w-full flex flex-wrap justify-center items-center gap-6">
+        {!projects ? (
+          <Loading />
+        ) : (
+          <>
+            {projects.map((project) => (
+              <Product
+                key={project.id}
+                name={project.name}
+                description={project.description}
+                linkRepo={project.linkRepo}
+                image={project.image}
+                started={project.started}
+                ended={project.ended}
+              />
+            ))}
+          </>
+        )}
+      </section>
+    </>
   );
 }
