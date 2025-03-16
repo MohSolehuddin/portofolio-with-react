@@ -16,24 +16,13 @@ export default function Product({
   started,
   ended,
 }: z.infer<typeof PortfolioSchema>) {
-  // const [name, setName] = React.useState("");
-  // const [price, setPrice] = React.useState(0);
-  // const [description, setDescription] = React.useState("");
-
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const response = await fetch("/api/products", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ name, price, description }),
-  //   });
-  //   const data = await response.json();
-  //   console.log(data);
-  // };
-
   const { theme } = useTheme();
+
+  // const ratio = { x: 3, y: 2 };
+  // const size = 90;
+  // const width = size * ratio.x;
+  // const height = size * ratio.y;
+
   const [spotlightColor, setSpotlightColor] = useState<
     "rgba(255, 255, 255, 0.25)" | "rgba(0, 0, 0, 0.25)"
   >("rgba(255, 255, 255, 0.25)");
@@ -46,31 +35,49 @@ export default function Product({
   }, [theme]);
 
   return (
-    <section className="w-[500px] h-[500px]">
-      <SpotlightCard className="h-[500px]" spotlightColor={spotlightColor}>
+    <section className="w-[450px] h-[450px] relative">
+      <SpotlightCard
+        className="h-[450px] w-[450px] p-0 absolute top-0 left-0"
+        spotlightColor={spotlightColor}>
         <Image
           src={image ?? "/solehuddin.webp"}
           loader={() => image ?? "/solehuddin.webp"}
           alt="logo"
-          width={100}
-          height={100}
-          className="w-full h-1/3 object-contain"
+          width={540}
+          height={300}
+          className="object-cover w-[450px] h-[300px]"
         />
-        <h3>{name}</h3>
-        <p>{description}</p>
-        <p>
-          Started:{" "}
-          {new Date(started).toLocaleString(undefined, { dateStyle: "long" })}
-        </p>
-        <p>
-          Ended:{" "}
-          {new Date(ended).toLocaleString(undefined, { dateStyle: "long" })}
-        </p>
-        {linkRepo && (
-          <Button>
-            <Link href={linkRepo}>GitHub</Link>
-          </Button>
-        )}
+        <section className="relative px-4 pt-2 bg-light/30 dark:bg-navy/50 w-[450px] h-[150px]">
+          <h3>{name}</h3>
+          <p>
+            {description?.slice(0, 100) +
+              (description?.length > 100 ? "..." : "")}
+          </p>
+          <section className="absolute left-0 bottom-2 w-full px-4 flex justify-between items-end">
+            {linkRepo && (
+              <Button>
+                <Link href={linkRepo}>GitHub</Link>
+              </Button>
+            )}
+            <Button>
+              <Link href="#">Show details</Link>
+            </Button>
+            <section className="flex flex-col">
+              <p>
+                Started:{" "}
+                {new Date(started).toLocaleString(undefined, {
+                  dateStyle: "long",
+                })}
+              </p>
+              <p>
+                Ended:{" "}
+                {new Date(ended).toLocaleString(undefined, {
+                  dateStyle: "long",
+                })}
+              </p>
+            </section>
+          </section>
+        </section>
       </SpotlightCard>
     </section>
   );
