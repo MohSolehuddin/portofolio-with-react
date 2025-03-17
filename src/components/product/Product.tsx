@@ -1,5 +1,5 @@
 "use client";
-import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
+import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default function Product({
   description,
   started,
   ended,
-}: z.infer<typeof PortfolioSchema>) {
+}: z.infer<typeof PortfolioInputSchema>) {
   const { theme } = useTheme();
 
   // const ratio = { x: 3, y: 2 };
@@ -49,10 +49,12 @@ export default function Product({
         />
         <section className="relative px-4 pt-2 bg-light/30 dark:bg-navy/50 w-[450px] h-[150px]">
           <h3>{name}</h3>
-          <p>
-            {description?.slice(0, 100) +
-              (description?.length > 100 ? "..." : "")}
-          </p>
+          {description && (
+            <p>
+              {description?.slice(0, 100) +
+                (description?.length > 100 ? "..." : "")}
+            </p>
+          )}
           <section className="absolute left-0 bottom-2 w-full px-4 flex justify-between items-end">
             {linkRepo && (
               <Button>
