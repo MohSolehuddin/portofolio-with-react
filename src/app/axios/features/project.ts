@@ -41,3 +41,15 @@ export const createProject = async (data: z.infer<typeof PortfolioSchema>) => {
     throw error;
   }
 };
+
+export const getOngoingProjects = async () => {
+  try {
+    const response = await axiosInstance.get(`/projects/ongoing`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
