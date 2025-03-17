@@ -1,5 +1,7 @@
 import PagingInterface from "@/lib/interfaces/PagingInterfaces";
+import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import axios from "axios";
+import { z } from "zod";
 import axiosInstance from "../axiosInstance";
 
 export const getProjects = async ({ page, limit }: PagingInterface) => {
