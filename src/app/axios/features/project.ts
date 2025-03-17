@@ -65,3 +65,15 @@ export const getCountCompletedProject = async () => {
     throw error;
   }
 };
+
+export const makeProjectOngoing = async (id: string) => {
+  try {
+    const response = await axiosInstance.post(`/projects/ongoing/${id}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
