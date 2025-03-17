@@ -7,7 +7,12 @@ export const PortfolioSchema = z.object({
   private: z.boolean().optional(),
   linkRepo: z.string().url().optional(),
   image: z.string().url().optional(),
-  started: z.date(),
-  ended: z.date(),
+  started: z.coerce.date(),
+  ended: z.coerce.date(),
   deletedAt: z.date().optional(),
+});
+
+export const PortfolioInputSchema = PortfolioSchema.extend({
+  description: z.string().nullable().optional(),
+  deletedAt: z.date().nullable().optional(),
 });
