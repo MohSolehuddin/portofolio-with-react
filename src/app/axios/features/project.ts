@@ -27,3 +27,15 @@ export const getProjectById = async (id: string) => {
     throw error;
   }
 };
+
+export const createProject = async (data: z.infer<typeof PortfolioSchema>) => {
+  try {
+    const response = await axiosInstance.post(`/projects`, data);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
