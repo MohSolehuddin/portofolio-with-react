@@ -42,7 +42,7 @@ export const createProject = async (data: z.infer<typeof PortfolioSchema>) => {
   }
 };
 
-export const getOngoingProjects = async () => {
+export const getCountOngoingProject = async () => {
   try {
     const response = await axiosInstance.get(`/projects/ongoing`);
     return response.data.data;
