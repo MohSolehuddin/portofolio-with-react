@@ -77,3 +77,15 @@ export const makeProjectOngoing = async (id: string) => {
     throw error;
   }
 };
+
+export const makeProjectCompleted = async (id: string) => {
+  try {
+    const response = await axiosInstance.post(`/projects/completed/${id}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
