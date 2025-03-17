@@ -1,6 +1,6 @@
 "use client";
+import { getProjects } from "@/app/axios/features/project";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import Loading from "../Loading";
@@ -13,12 +13,8 @@ export default function Products() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      try {
-        const response = await axios.get("/api/v1/projects?page=1&limit=100");
-        setProjects(response.data.data);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
+      const portfolio = await getProjects({ page: 1, limit: 100 });
+      setProjects(portfolio);
     };
     fetchProjects();
   }, []);
