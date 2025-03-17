@@ -7,12 +7,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     try {
-      if (!config) return config;
-      const token = localStorage.getItem("token");
-      console.log("url when request", config?.baseURL ?? "" + config?.url);
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      console.log(`URL when request is sent: ${config.baseURL}${config.url}`);
       return config;
     } catch (error) {
       return Promise.reject(error);
@@ -23,15 +18,10 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-export const setAxiosResponseInterceptor = (
-  navigation: (url: string) => void
-) => {
+export const setAxiosResponseInterceptor = () => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response && error.response.status === 401) {
-        navigation("LoginSuccess");
-      }
       return Promise.reject(error);
     }
   );
