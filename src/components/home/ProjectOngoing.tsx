@@ -1,4 +1,4 @@
-import axios from "axios";
+import { getCountOngoingProject } from "@/app/axios/features/project";
 import { useEffect, useState } from "react";
 import ProgressStat from "../stats/ProgressStat";
 
@@ -8,8 +8,8 @@ export default function ProjectOngoing() {
   useEffect(() => {
     const getTotalOngoingProjects = async () => {
       try {
-        const response = await axios.get("/api/v1/projects/ongoing");
-        setOngoingProjects(response.data.data);
+        const response = await getCountOngoingProject();
+        setOngoingProjects(response);
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
