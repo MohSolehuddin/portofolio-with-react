@@ -15,3 +15,15 @@ export const getProjects = async ({ page, limit }: PagingInterface) => {
     throw error;
   }
 };
+
+export const getProjectById = async (id: string) => {
+  try {
+    const response = await axiosInstance.get(`/projects/${id}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
