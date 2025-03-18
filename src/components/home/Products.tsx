@@ -7,6 +7,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import Loading from "../Loading";
+import { CustomPagination } from "../pagination/CustomPagination";
 import Product from "../product/Product";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function ProductsContent() {
           />
         ))}
       </section>
+      <CustomPagination />
     </>
   );
 }
