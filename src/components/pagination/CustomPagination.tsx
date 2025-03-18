@@ -8,29 +8,80 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function CustomPagination() {
+interface PaginationProps {
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalPage: number;
+}
+
+export function CustomPagination({
+  currentPage,
+  setCurrentPage,
+  totalPage,
+}: PaginationProps) {
+  if (totalPage <= 1) return null;
+
+  const getPageNumbers = (): (number | "...")[] => {
+    if (totalPage <= 6) {
+      return Array.from({ length: totalPage }, (_, i) => i + 1);
+    }
+
+    const pages: (number | "...")[] = [1];
+
+    if (currentPage > 3) {
+      pages.push("...");
+    }
+
+    const middlePages = Array.from(
+      { length: 3 },
+      (_, i) => currentPage - 1 + i
+    ).filter((page) => page > 1 && page < totalPage);
+
+    pages.push(...middlePages);
+
+    if (currentPage < totalPage - 2) {
+      pages.push("...");
+    }
+
+    pages.push(totalPage);
+    return pages;
+  };
+
+  const handelPrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href="#" />
+          <PaginationPrevious onClick={handelPrevious} />
         </PaginationItem>
+
+        {getPageNumbers().map((page, index) => (
+          <PaginationItem key={index}>
+            {page === "..." ? (
+              <PaginationEllipsis />
+            ) : (
+              <PaginationLink
+                onClick={() => setCurrentPage(page)}
+                isActive={currentPage === page}>
+                {page}
+              </PaginationLink>
+            )}
+          </PaginationItem>
+        ))}
+
         <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            2
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext onClick={handleNext} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
