@@ -6,6 +6,7 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { useState } from "react";
 import Loading from "../Loading";
 import { CustomPagination } from "../pagination/CustomPagination";
 import Product from "../product/Product";
@@ -21,16 +22,18 @@ export default function Products() {
 }
 
 function ProductsContent() {
+  const [page, setPage] = useState(1);
   const { data, isLoading, error } = useQuery({
-    queryKey: ["projects"],
-    queryFn: () => getProjects({ page: 1, limit: 100 }),
+    queryKey: ["projects", page],
+    queryFn: () => getProjects({ page, limit: 3 }),
   });
+  console.log(data);
 
   if (isLoading) return <Loading />;
   if (error)
     return <p className="text-center text-red-500">Error loading projects.</p>;
 
-  const validatedProjects = PortfolioInputSchema.array().safeParse(data);
+  const validatedProjects = PortfolioInputSchema.array().safeParse(data.data);
   if (!validatedProjects.success)
     return <p className="text-center text-red-500">Invalid data format.</p>;
 
@@ -52,7 +55,11 @@ function ProductsContent() {
           />
         ))}
       </section>
-      <CustomPagination />
+      <CustomPagination
+        currentPage={page}
+        setCurrentPage={setPage}
+        totalPage={data.paging.totalPage}
+      />
     </>
   );
 }
