@@ -7,7 +7,7 @@ import {
   deletePortfolio,
   updatePortfolio,
 } from "@/data/portfolio";
-import { github } from "@/lib/github/github";
+import { github } from "@/lib/github";
 import { PagingSchema } from "@/lib/schema/pagingSchema";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import { db } from "@/server/db";
