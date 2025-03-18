@@ -9,7 +9,7 @@ export const getProjects = async ({ page, limit }: PagingInterface) => {
     const response = await axiosInstance.get(
       `/projects?page=${page}&limit=${limit}`
     );
-    return response.data.data;
+    return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.log(error);
