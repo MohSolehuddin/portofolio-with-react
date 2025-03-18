@@ -42,15 +42,24 @@ export async function GET(req: Request) {
     });
 
     const linkHeader = projects.headers.link;
-    const pagesRemaining = linkHeader && linkHeader.includes(`rel="next"`);
-
+    const isNext = linkHeader?.includes(`rel="next"`);
+    const isPrev = linkHeader?.includes(`rel="prev"`);
     let totalPage = 1;
-    if (pagesRemaining) {
+    if (isNext) {
       const lastPattern = /(?<=<)([\S]*)(?=>; rel="last")/i;
       const lastUrl = linkHeader?.match(lastPattern)?.[0];
       const numberOfLastPage = new URL(lastUrl ?? "").searchParams.get("page");
       totalPage = Number(numberOfLastPage ?? 1);
     }
+    if (isPrev) {
+      const prevPattern = /(?<=<)([\S]*)(?=>; rel="prev")/i;
+      const lastUrl = linkHeader?.match(prevPattern)?.[0];
+      const numberOfLastPage = new URL(lastUrl ?? "").searchParams.get("page");
+      if (numberOfLastPage) {
+        totalPage = Number(numberOfLastPage) + 1;
+      }
+    }
+
     const data = portfolioMapper(projects.data as PortfolioGithubResponse[]);
     const responseData = {
       message: "Successfully getting projects",
