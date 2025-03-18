@@ -81,3 +81,13 @@ model HistoryOfUpdatingPortfolio {
   id String @id @default(uuid())
   lastUpdate DateTime
 }
+
+enum ErrorType {
+  ERROR
+  WARNING
+}
+model ErrorLog {
+  id String @id @default(uuid())
+  type ErrorType @default(ERROR)
+  message String
+}
