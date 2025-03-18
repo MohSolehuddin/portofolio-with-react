@@ -38,11 +38,11 @@ function ProductsContent() {
     return <p className="text-center text-red-500">Invalid data format.</p>;
 
   return (
-    <>
-      <h3 className="text-5xl text-light mb-12 font-extrabold text-center">
+    <section className="min-h-screen flex flex-col justify-center items-center">
+      <h3 className="text-5xl text-navy dark:text-light mb-12 font-extrabold text-center">
         My Recent Projects
       </h3>
-      <section className="min-h-screen z-40 w-full flex flex-wrap justify-center items-center gap-6">
+      <section className="z-40 w-full flex flex-wrap justify-center items-center gap-6">
         {validatedProjects.data.map((project) => (
           <Product
             key={project.id}
@@ -60,6 +60,6 @@ function ProductsContent() {
         setCurrentPage={setPage}
         totalPage={data.paging.totalPage}
       />
-    </>
+    </section>
   );
 }
