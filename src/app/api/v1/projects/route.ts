@@ -7,86 +7,113 @@ import {
   deletePortfolio,
   updatePortfolio,
 } from "@/data/portfolio";
-import { github } from "@/lib/github";
+import { github } from "@/lib/github/github";
+import { PagingSchema } from "@/lib/schema/pagingSchema";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import { db } from "@/server/db";
 import {
   PortfolioGithubResponse,
   portfolioMapper,
 } from "@/server/response-mapper/portfolioMapper";
-// import { getToken } from "next-auth/jwt";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const page = searchParams.get("page") || 1;
-  const limit = searchParams.get("limit") || 10;
+  try {
+    const { searchParams } = new URL(req.url);
+    let page = searchParams.get("page") || 1;
+    let limit = searchParams.get("limit") || 10;
 
-  if (Number(page).toString() === "NaN" || Number(limit).toString() === "NaN") {
-    return Response.json(
-      {
-        message: "Invalid page or limit, please input a number",
-        data: [],
-      },
-      { status: 400 }
-    );
-  }
+    const validatedData = PagingSchema.safeParse({
+      page,
+      limit,
+    });
 
-  const projects = await github.request("GET /user/repos", {
-    type: "all",
-    per_page: Number(limit),
-    page: Number(page),
-    sort: "created",
-    direction: "desc",
-  });
-  console.log("Response structure", projects.data[0]);
+    if (!validatedData.success)
+      return Response.json(validatedData.error, { status: 400 });
 
-  const data = portfolioMapper(projects.data as PortfolioGithubResponse[]);
+    page = validatedData.data.page;
+    limit = validatedData.data.limit;
 
-  const lastUpdate = await getLastUpdate();
+    const projects = await github.request("GET /user/repos", {
+      type: "all",
+      per_page: limit,
+      page,
+      sort: "created",
+      direction: "desc",
+    });
 
-  if (lastUpdate.length > 0) {
-    const lastUpdateDate = new Date(lastUpdate[0].lastUpdate);
+    const linkHeader = projects.headers.link;
+    const pagesRemaining = linkHeader && linkHeader.includes(`rel="next"`);
 
-    const timeDiff = new Date().getTime() - lastUpdateDate.getTime();
-    const hoursDiff = timeDiff / (1000 * 3600);
-
-    if (hoursDiff < 24) {
-      return Response.json({ data }, { status: 200 });
+    let totalPage = 1;
+    if (pagesRemaining) {
+      const lastPattern = /(?<=<)([\S]*)(?=>; rel="last")/i;
+      const lastUrl = linkHeader?.match(lastPattern)?.[0];
+      const numberOfLastPage = new URL(lastUrl ?? "").searchParams.get("page");
+      totalPage = Number(numberOfLastPage ?? 1);
     }
-  }
+    const data = portfolioMapper(projects.data as PortfolioGithubResponse[]);
+    const responseData = {
+      message: "Successfully getting projects",
+      data,
+      paging: {
+        page,
+        limit,
+        totalPage,
+      },
+    };
 
-  // const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  (async () => {
-    for (const project of data) {
-      await db.portfolio.upsert({
-        where: { id: project.id },
-        update: {
-          id: project.id,
-          description: project.description ?? "",
-          private: project.private,
-          linkRepo: project.linkRepo,
-          image: project.image,
-          isShow: !project.private,
-          ended: project.ended,
-          updatedAt: new Date(),
-        },
-        create: {
-          id: project.id,
-          name: project.name,
-          description: project.description ?? "",
-          private: project.private,
-          linkRepo: project.linkRepo,
-          image: project.image,
-          started: project.started,
-          ended: project.ended,
+    const lastUpdate = await getLastUpdate();
+
+    if (lastUpdate.length > 0) {
+      const lastUpdateDate = new Date(lastUpdate[0].lastUpdate);
+      const timeDiff = new Date().getTime() - lastUpdateDate.getTime();
+      const hoursDiff = timeDiff / (1000 * 3600);
+      if (hoursDiff < 24) return Response.json(responseData, { status: 200 });
+    }
+
+    (async () => {
+      for (const project of data) {
+        await db.portfolio.upsert({
+          where: { id: project.id },
+          update: {
+            description: project.description ?? "",
+            private: project.private,
+            linkRepo: project.linkRepo,
+            isShow: !project.private,
+            ended: project.ended,
+            updatedAt: new Date(),
+          },
+          create: {
+            id: project.id,
+            name: project.name,
+            description: project.description ?? "",
+            private: project.private,
+            linkRepo: project.linkRepo,
+            image: project.image,
+            started: project.started,
+            ended: project.ended,
+          },
+        });
+      }
+
+      await upsertHistoryOfUpdatingPortfolio();
+    })();
+
+    return Response.json(responseData, { status: 200 });
+  } catch (error) {
+    if (error) {
+      const errorString = JSON.stringify(error);
+      const createdError = await db.errorLog.create({
+        data: {
+          message: errorString,
         },
       });
+      return Response.json(
+        { message: "Something went wrong", requestId: createdError.id },
+        { status: 500 }
+      );
     }
-
-    await upsertHistoryOfUpdatingPortfolio();
-  })();
-
-  return Response.json({ data }, { status: 200 });
+  }
 }
 
 export async function POST(req: Request) {
