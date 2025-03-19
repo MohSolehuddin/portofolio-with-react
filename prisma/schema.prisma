@@ -82,6 +82,20 @@ model HistoryOfUpdatingPortfolio {
   lastUpdate DateTime
 }
 
+enum SocialMediaTYPE {
+  GITHUB
+  YOUTUBE
+  INSTAGRAM
+  WEBSITE
+}
+
+model SocialMedia {
+  id String @id @default(uuid())
+  type SocialMediaTYPE @default(WEBSITE)
+  name String
+  link String @unique
+}
+
 enum ErrorType {
   ERROR
   WARNING
