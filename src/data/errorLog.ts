@@ -13,6 +13,20 @@ export const createErrorLog = async (error: string) => {
   }
 };
 
+export const createWarningLog = async (error: string) => {
+  try {
+    return await db.errorLog.create({
+      data: {
+        type: "WARNING",
+        message: error,
+      },
+    });
+  } catch (err) {
+    const errorLogInString = JSON.stringify(err);
+    await createErrorLog(errorLogInString);
+  }
+};
+
 export const getAllErrorLog = async () => {
   return db.errorLog.findMany();
 };
