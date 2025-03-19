@@ -14,14 +14,10 @@ export default function Product({
   linkRepo,
   description,
   started,
+  isPrivate,
   ended,
 }: z.infer<typeof PortfolioInputSchema>) {
   const { theme } = useTheme();
-
-  // const ratio = { x: 3, y: 2 };
-  // const size = 90;
-  // const width = size * ratio.x;
-  // const height = size * ratio.y;
 
   const [spotlightColor, setSpotlightColor] = useState<
     "rgba(255, 255, 255, 0.25)" | "rgba(0, 0, 0, 0.25)"
@@ -56,7 +52,7 @@ export default function Product({
             </p>
           )}
           <section className="absolute left-0 bottom-2 w-full px-4 flex justify-between items-end">
-            {linkRepo && (
+            {linkRepo && !isPrivate && (
               <Button>
                 <Link href={linkRepo}>GitHub</Link>
               </Button>

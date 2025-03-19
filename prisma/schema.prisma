@@ -65,7 +65,7 @@ model Portfolio {
   id String @id @default(uuid())
   name String
   description String
-  private Boolean @default(false)
+  isPrivate Boolean @default(false)
   linkRepo String?
   image String?
   isShow Boolean @default(true)

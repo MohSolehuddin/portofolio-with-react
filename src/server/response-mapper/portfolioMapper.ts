@@ -16,7 +16,7 @@ export const portfolioMapper = (data: PortfolioGithubResponse[]) => {
     id: project.id.toString(),
     name: project.name,
     description: project.description,
-    private: project.private,
+    isPrivate: project.private,
     linkRepo: project.html_url,
     image: project.owner.avatar_url,
     started: new Date(project.created_at as string),

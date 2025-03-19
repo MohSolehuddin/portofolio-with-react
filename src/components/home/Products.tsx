@@ -64,6 +64,7 @@ function ProductsContent() {
             image={project.image}
             started={project.started}
             ended={project.ended}
+            isPrivate={project.isPrivate}
           />
         ))}
       </section>
