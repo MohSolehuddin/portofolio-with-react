@@ -206,8 +206,10 @@ export default function MySkill() {
   ];
 
   return (
-    <section className="h-screen p-6 flex justify-center items-center flex-col gap-12">
-      <h3 className="text-3xl font-bold mb-4 text-center">My Skill Set</h3>
+    <section className="h-screen p-6 flex justify-center items-center flex-col">
+      <h3 className="text-5xl font-extrabold mb-12 text-center text-navy dark:text-white">
+        My Skill Set
+      </h3>
 
       <div className="flex flex-wrap gap-2 justify-center">
         {techStack.map((tech) => (
