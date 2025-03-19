@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FaGithub, FaInstagram, FaTiktok } from "react-icons/fa";
 export default function SocialMedia() {
   return (
-    <section className="social-media flex justify-center items-center gap-6 text-3xl">
+    <section className="social-media flex justify-center items-center gap-6 text-3xl text-navy dark:text-white">
       <Link href="https://github.com/MohSolehuddin" target="_blank">
         <FaGithub />
       </Link>
