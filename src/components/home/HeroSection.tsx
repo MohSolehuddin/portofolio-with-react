@@ -6,6 +6,7 @@ import TypingEffect from "@/components/TypingEffect";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import SocialMedia from "../socialMedia/SocialMedia";
 import ProjectCompleted from "./ProjectCompleted";
 import ProjectOngoing from "./ProjectOngoing";
 import YearOfExperience from "./YearOfExperience";
@@ -34,6 +35,13 @@ export default function HeroSection() {
       <motion.div
         style={{ y: heroSectionY, opacity: textOpacity }}
         className="absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic p-12 rounded-xl dark:bg-black/20 bg-light/30">
+        <section className="absolute top-12 right-12">
+          <h3 className="text-lg font-bold dark:text-light text-navy mb-2">
+            Contact me at
+          </h3>
+          <SocialMedia />
+        </section>
+
         <motion.h1
           className="text-5xl font-bold dark:text-light text-navy drop-shadow-lg shadow-accent"
           initial={{ opacity: 0, y: 30 }}
