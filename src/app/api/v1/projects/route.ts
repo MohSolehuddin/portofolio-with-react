@@ -1,3 +1,4 @@
+import { createErrorLog } from "@/data/errorLog";
 import {
   getLastUpdate,
   upsertHistoryOfUpdatingPortfolio,
@@ -112,18 +113,11 @@ export async function GET(req: Request) {
 
     return Response.json(responseData, { status: 200 });
   } catch (error) {
-    if (error) {
-      const errorString = JSON.stringify(error);
-      const createdError = await db.errorLog.create({
-        data: {
-          message: errorString,
-        },
-      });
-      return Response.json(
-        { message: "Something went wrong", requestId: createdError.id },
-        { status: 500 }
-      );
-    }
+    const createdError = await createErrorLog(JSON.stringify(error));
+    return Response.json(
+      { message: "Something went wrong", requestId: createdError?.id },
+      { status: 500 }
+    );
   }
 }
 
