@@ -122,37 +122,64 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const data = await req.json();
-  const validatedData = PortfolioSchema.safeParse(data);
-  if (!validatedData.success)
-    return Response.json(validatedData.error, { status: 400 });
+  try {
+    const data = await req.json();
+    const validatedData = PortfolioSchema.safeParse(data);
+    if (!validatedData.success)
+      return Response.json(validatedData.error, { status: 400 });
 
-  const createdPortfolio = await createPortfolio(validatedData.data);
-  return Response.json({ data: createdPortfolio }, { status: 200 });
+    const createdPortfolio = await createPortfolio(validatedData.data);
+    return Response.json({ data: createdPortfolio }, { status: 200 });
+  } catch (error) {
+    const createdError = await createErrorLog(JSON.stringify(error));
+    return Response.json(
+      { message: "Something went wrong", requestId: createdError?.id },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-  if (!id) return Response.json({ message: "id is required" }, { status: 400 });
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id)
+      return Response.json({ message: "id is required" }, { status: 400 });
 
-  const deletedPortfolio = await deletePortfolio(id);
-  return Response.json({ data: deletedPortfolio }, { status: 200 });
+    const deletedPortfolio = await deletePortfolio(id);
+    return Response.json({ data: deletedPortfolio }, { status: 200 });
+  } catch (error) {
+    const createdError = await createErrorLog(JSON.stringify(error));
+    return Response.json(
+      { message: "Something went wrong", requestId: createdError?.id },
+      { status: 500 }
+    );
+  }
 }
+
 export async function PUT(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get("id");
-  if (!id) return Response.json({ message: "id is required" }, { status: 400 });
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (!id)
+      return Response.json({ message: "id is required" }, { status: 400 });
 
-  const data = await req.json();
+    const data = await req.json();
 
-  const validatedData = PortfolioSchema.safeParse(data);
-  if (!validatedData.success)
-    return Response.json(validatedData.error, { status: 400 });
+    const validatedData = PortfolioSchema.safeParse(data);
+    if (!validatedData.success)
+      return Response.json(validatedData.error, { status: 400 });
 
-  const updatedPortfolio = await updatePortfolio(id, {
-    ...validatedData.data,
-  });
+    const updatedPortfolio = await updatePortfolio(id, {
+      ...validatedData.data,
+    });
 
-  return Response.json({ data: updatedPortfolio }, { status: 200 });
+    return Response.json({ data: updatedPortfolio }, { status: 200 });
+  } catch (error) {
+    const createdError = await createErrorLog(JSON.stringify(error));
+    return Response.json(
+      { message: "Something went wrong", requestId: createdError?.id },
+      { status: 500 }
+    );
+  }
 }
