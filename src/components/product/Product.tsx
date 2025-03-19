@@ -25,21 +25,13 @@ const Product = memo(function Product({
     [theme]
   );
 
-  const startedDate = useMemo(
-    () =>
-      new Date(started).toLocaleString(undefined, {
-        dateStyle: "long",
-      }),
-    [started]
-  );
+  const startedDate = new Date(started).toLocaleString(undefined, {
+    dateStyle: "medium",
+  });
 
-  const endedDate = useMemo(
-    () =>
-      new Date(ended).toLocaleString(undefined, {
-        dateStyle: "long",
-      }),
-    [ended]
-  );
+  const endedDate = new Date(ended).toLocaleString(undefined, {
+    dateStyle: "medium",
+  });
 
   return (
     <section className="w-[450px] h-[450px] relative">
@@ -71,9 +63,10 @@ const Product = memo(function Product({
             <Button>
               <Link href="#">Show details</Link>
             </Button>
-            <section className="flex flex-col">
-              <p>Started: {startedDate}</p>
-              <p>Ended: {endedDate}</p>
+            <section className="flex gap-2">
+              <p>{startedDate}</p>
+              <p> - </p>
+              <p>{endedDate}</p>
             </section>
           </section>
         </section>
