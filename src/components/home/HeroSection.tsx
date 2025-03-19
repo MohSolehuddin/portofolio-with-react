@@ -17,7 +17,7 @@ export default function HeroSection() {
   const heroSectionY = useTransform(scrollY, [0, 700], [0, -200]);
   const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
   return (
-    <div className="relative z-10 h-screen flex flex-col items-center justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
+    <div className="md:relative z-10 h-screen flex flex-col items-center justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
       <motion.div
         style={{ y: heroSectionY }}
         initial={{ opacity: 0, x: -60 }}
@@ -103,7 +103,11 @@ export default function HeroSection() {
           <ProjectOngoing />
         </motion.section>
         <Magnet>
-          <Button>Download CV</Button>
+          <a
+            href="https://drive.google.com/file/d/15XGcxQzN52bkJ4JrLYSzM7PCxqaHkPRY/view?usp=drive_link"
+            about="_blank">
+            <Button>Download CV</Button>
+          </a>
         </Magnet>
       </motion.div>
     </div>
