@@ -33,3 +33,21 @@ export const softDeletePortfolio = async (id: string) => {
     data: { deletedAt: new Date() },
   });
 };
+
+export const countCompletedProjects = async () => {
+  return await db.portfolio.count({
+    where: {
+      completedAt: {
+        not: null,
+      },
+    },
+  });
+};
+
+export const countOngoingProjects = async () => {
+  return await db.portfolio.count({
+    where: {
+      completedAt: null,
+    },
+  });
+};
