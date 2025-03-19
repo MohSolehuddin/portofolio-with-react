@@ -8,3 +8,11 @@ export const getAllSocialMedia = async () => {
 export const createSocialMedia = async (data: SocialMediaType) => {
   return await db.socialMedia.create({ data });
 };
+
+export const deleteSocialMedia = async (id: string) => {
+  return await db.socialMedia.delete({ where: { id } });
+};
+
+export const updateSocialMedia = async (id: string, data: SocialMediaType) => {
+  return await db.socialMedia.update({ where: { id }, data });
+};
