@@ -1,12 +1,6 @@
-import { db } from "@/server/db";
+import { countCompletedProjects } from "@/data/portfolio";
 
 export async function GET() {
-  const countCompletedProjects = await db.portfolio.count({
-    where: {
-      completedAt: {
-        not: null,
-      },
-    },
-  });
-  return Response.json({ data: countCompletedProjects }, { status: 200 });
+  const result = await countCompletedProjects();
+  return Response.json({ data: result }, { status: 200 });
 }
