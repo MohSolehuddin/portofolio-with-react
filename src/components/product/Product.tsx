@@ -3,12 +3,12 @@ import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { memo, useMemo } from "react";
 import { z } from "zod";
 import SpotlightCard from "../SpotlightCard/SpotlightCard";
 import { Button } from "../ui/button";
 
-export default function Product({
+const Product = memo(function Product({
   name,
   image,
   linkRepo,
@@ -19,16 +19,27 @@ export default function Product({
 }: z.infer<typeof PortfolioInputSchema>) {
   const { theme } = useTheme();
 
-  const [spotlightColor, setSpotlightColor] = useState<
-    "rgba(255, 255, 255, 0.25)" | "rgba(0, 0, 0, 0.25)"
-  >("rgba(255, 255, 255, 0.25)");
-  useEffect(() => {
-    if (theme === "dark") {
-      setSpotlightColor("rgba(255, 255, 255, 0.25)");
-    } else {
-      setSpotlightColor("rgba(0, 0, 0, 0.25)");
-    }
-  }, [theme]);
+  const spotlightColor = useMemo(
+    () =>
+      theme === "dark" ? "rgba(255, 255, 255, 0.25)" : "rgba(0, 0, 0, 0.25)",
+    [theme]
+  );
+
+  const startedDate = useMemo(
+    () =>
+      new Date(started).toLocaleString(undefined, {
+        dateStyle: "long",
+      }),
+    [started]
+  );
+
+  const endedDate = useMemo(
+    () =>
+      new Date(ended).toLocaleString(undefined, {
+        dateStyle: "long",
+      }),
+    [ended]
+  );
 
   return (
     <section className="w-[450px] h-[450px] relative">
@@ -61,22 +72,14 @@ export default function Product({
               <Link href="#">Show details</Link>
             </Button>
             <section className="flex flex-col">
-              <p>
-                Started:{" "}
-                {new Date(started).toLocaleString(undefined, {
-                  dateStyle: "long",
-                })}
-              </p>
-              <p>
-                Ended:{" "}
-                {new Date(ended).toLocaleString(undefined, {
-                  dateStyle: "long",
-                })}
-              </p>
+              <p>Started: {startedDate}</p>
+              <p>Ended: {endedDate}</p>
             </section>
           </section>
         </section>
       </SpotlightCard>
     </section>
   );
-}
+});
+
+export default Product;
