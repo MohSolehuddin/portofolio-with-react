@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { navigationList } from "@/lib/constants";
 import { LucideSettings } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -16,17 +17,19 @@ export function NavBar() {
   const { status } = useSession();
 
   return (
-    <nav className="w-full flex justify-between py-2">
+    <nav className="w-full flex justify-between py-2 bg-navy z-50">
       <NavigationMenu>
         <NavigationMenuList className="flex gap-4">
-          <NavigationMenuItem>
-            <Link href="/" legacyBehavior passHref>
-              <NavigationMenuLink
-                className={navigationMenuTriggerStyle() + " underline"}>
-                Home
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {navigationList.map((item, index) => (
+            <NavigationMenuItem key={item.name + index}>
+              <Link href={item.href} legacyBehavior passHref>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle() + " underline"}>
+                  {item.name}
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          ))}
         </NavigationMenuList>
       </NavigationMenu>
       <NavigationMenu>
