@@ -1,11 +1,6 @@
 "use client";
-import { getProjects } from "@/app/axios/features/project";
-import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import useProjects from "@/hooks/useProjects";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import Loading from "../Loading";
 import { CustomPagination } from "../pagination/CustomPagination";
@@ -23,10 +18,8 @@ export default function Products() {
 
 function ProductsContent() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["projects", page],
-    queryFn: () => getProjects({ page, limit: 3 }),
-  });
+  const { projects, paging, isValidatedProjectsSuccess, isLoading, error } =
+    useProjects({ page, limit: 3 });
 
   if (isLoading)
     return (
@@ -41,8 +34,7 @@ function ProductsContent() {
       </section>
     );
 
-  const validatedProjects = PortfolioInputSchema.array().safeParse(data.data);
-  if (!validatedProjects.success)
+  if (!isValidatedProjectsSuccess)
     return (
       <section className="h-screen flex justify-center items-center">
         <p className="text-center text-red-500">Invalid data format.</p>
@@ -55,23 +47,24 @@ function ProductsContent() {
         My Recent Projects
       </h3>
       <section className="z-40 w-full flex flex-wrap justify-center items-center gap-6">
-        {validatedProjects.data.map((project) => (
-          <Product
-            key={project.id}
-            name={project.name}
-            description={project.description}
-            linkRepo={project.linkRepo}
-            image={project.image}
-            started={project.started}
-            ended={project.ended}
-            isPrivate={project.isPrivate}
-          />
-        ))}
+        {projects &&
+          projects.map((project) => (
+            <Product
+              key={project.id}
+              name={project.name}
+              description={project.description}
+              linkRepo={project.linkRepo}
+              image={project.image}
+              started={project.started}
+              ended={project.ended}
+              isPrivate={project.isPrivate}
+            />
+          ))}
       </section>
       <CustomPagination
         currentPage={page}
         setCurrentPage={setPage}
-        totalPage={data.paging.totalPage}
+        totalPage={paging.totalPage}
       />
     </section>
   );
