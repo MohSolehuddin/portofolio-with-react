@@ -13,6 +13,7 @@ export const PortfolioSchema = z.object({
 });
 
 export const PortfolioInputSchema = PortfolioSchema.extend({
+  isPrivate: z.coerce.boolean().optional(),
   description: z.string().nullable().optional(),
   deletedAt: z.date().nullable().optional(),
 });

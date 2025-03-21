@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import Loading from "../Loading";
 import { CustomPagination } from "../pagination/CustomPagination";
-import Product from "../product/Product";
+import Product from "../project/ListProjectInClient";
 
 const queryClient = new QueryClient();
 
