@@ -128,7 +128,9 @@ export async function POST(req: Request) {
     if (!validatedData.success)
       return Response.json(validatedData.error, { status: 400 });
 
-    const createdPortfolio = await createPortfolio(validatedData.data);
+    const portfolioData = validatedData.data;
+    if (!portfolioData.id) portfolioData.id = undefined;
+    const createdPortfolio = await createPortfolio(portfolioData);
     return Response.json({ data: createdPortfolio }, { status: 200 });
   } catch (error) {
     const createdError = await createErrorLog(JSON.stringify(error));
