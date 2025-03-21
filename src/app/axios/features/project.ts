@@ -1,5 +1,5 @@
 import PagingInterface from "@/lib/interfaces/PagingInterfaces";
-import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
+import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import axios from "axios";
 import { z } from "zod";
 import axiosInstance from "../axiosInstance";
@@ -30,7 +30,9 @@ export const getProjectById = async (id: string) => {
   }
 };
 
-export const createProject = async (data: z.infer<typeof PortfolioSchema>) => {
+export const createProject = async (
+  data: z.infer<typeof PortfolioInputSchema>
+) => {
   try {
     const response = await axiosInstance.post(`/projects`, data);
     return response.data.data;
