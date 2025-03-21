@@ -7,12 +7,10 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useProjects from "@/hooks/useProjects";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaRegEye, FaTrash } from "react-icons/fa";
 
 export default function Page() {
-  const { data: session } = useSession();
   const [page, setPage] = useState(1);
   const [isModalAddProjectOpen, setIsModalAddProjectOpen] = useState(false);
   const [listCheckedPortfolio, setListCheckedPortfolio] = useState<string[]>(
@@ -50,6 +48,10 @@ export default function Page() {
     setIsModalAddProjectOpen(true);
   };
 
+  useEffect(() => {
+    setListCheckedPortfolio([]);
+  }, [page]);
+
   if (isLoading)
     return (
       <section className="h-screen flex justify-center items-center">
@@ -76,51 +78,68 @@ export default function Page() {
           <p>Add Project</p>
         </Button>
       </section>
-      <h3>Welcome {session?.user.name}</h3>
-      <h3>Daftar Project</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <Input
-                type="checkbox"
-                checked={projects.length === listCheckedPortfolio.length}
-                onClick={handleCheckedAllPortfolio}
-              />
-            </th>
-            <th>Project</th>
-            <th>Description</th>
-            <th>Link</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects?.map((project) => (
-            <tr key={project.id}>
-              <td>
-                <Input
-                  type="checkbox"
-                  checked={listCheckedPortfolio.includes(project.id as string)}
-                  onClick={() => handleCheckedPortfolio(project.id ?? "")}
-                />
-              </td>
-              <td>{project.name}</td>
-              <td>{project.description}</td>
-              <td>{project.linkRepo}</td>
-              <td className="flex gap-2">
-                <Button>
-                  <FaPen />
-                  <p>Edit</p>
+      <h3 className="mb-6">Daftar Project</h3>
+      <section className="bg-navy/20 dark:bg-light/5 rounded-lg p-6 mb-6">
+        <table
+          className="rounded-xl w-full overflow-hidden"
+          cellPadding="4"
+          cellSpacing="4">
+          <thead>
+            <tr className="bg-light dark:bg-dark">
+              <th className="p-4">
+                <Button onClick={handleCheckedAllPortfolio}>
+                  {projects.length === listCheckedPortfolio.length
+                    ? "Unselect All"
+                    : "Select All"}
                 </Button>
-                <Button variant={"destructive"}>
-                  <FaTrash />
-                  <p>Delete</p>
-                </Button>
-              </td>
+              </th>
+              <th className="p-4">Project</th>
+              <th className="p-4">Description</th>
+              <th className="p-4">Link</th>
+              <th className="p-4">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {projects?.map((project) => (
+              <tr
+                key={project.id}
+                className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                <td className="p-4 text-center">
+                  <Input
+                    type="checkbox"
+                    checked={listCheckedPortfolio.includes(
+                      project.id as string
+                    )}
+                    onClick={() => handleCheckedPortfolio(project.id ?? "")}
+                    className="w-6 h-6"
+                  />
+                </td>
+                <td className="p-4">{project.name}</td>
+                <td className="p-4">
+                  {project.description && project.description?.length > 50
+                    ? project.description?.slice(0, 50) + "..."
+                    : project.description}
+                </td>
+                <td className="p-4">{project.linkRepo}</td>
+                <td className="p-4 flex gap-4">
+                  <Button>
+                    <FaRegEye />
+                    <p>Details</p>
+                  </Button>
+                  <Button>
+                    <FaPen />
+                    <p>Edit</p>
+                  </Button>
+                  <Button variant={"destructive"}>
+                    <FaTrash />
+                    <p>Delete</p>
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
       <CustomPagination
         setCurrentPage={setPage}
         currentPage={page}
