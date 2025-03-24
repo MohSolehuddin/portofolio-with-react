@@ -9,7 +9,7 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useProjects from "@/hooks/useProjects";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FaPen, FaPlus, FaRegEye, FaTrash } from "react-icons/fa";
 
@@ -20,6 +20,8 @@ export default function Page() {
     []
   );
 
+  const queryClient = useQueryClient();
+
   const { projects, paging, isLoading, error } = useProjects({
     page,
     limit: 10,
@@ -29,6 +31,7 @@ export default function Page() {
       return deleteProjectById(id);
     },
     onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ["projects", page] });
       console.log("Successfully deleting project");
     },
     onError: (err) => {
@@ -184,7 +187,7 @@ export default function Page() {
             <DialogHeader>
               <DialogTitle>Add a Project</DialogTitle>
             </DialogHeader>
-            <FormProduct />
+            <FormProduct page={page} />
           </DialogContent>
         </Dialog>
       </section>
