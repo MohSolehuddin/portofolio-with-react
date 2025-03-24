@@ -25,13 +25,17 @@ export default function useProjects({
 
   const validatedProjects = data
     ? PortfolioInputSchema.array().safeParse(data.data)
-    : { success: false, data: [] };
+    : {
+        success: false,
+        data: [],
+        error: { message: "Don't receipt another data" },
+      };
 
   return {
     projects: validatedProjects.data || [],
     paging: data ? data.paging : { totalPage: 0 },
     isLoading,
-    error,
+    error: error ?? validatedProjects.error,
     isValidatedProjectsSuccess: validatedProjects.success,
   };
 }
