@@ -3,7 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { createProject } from "@/app/axios/features/project";
+import {
+  createProject,
+  getProjectById,
+  updateProject,
+} from "@/app/axios/features/project";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,11 +20,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { z } from "zod";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";
 
-export default function FormProduct({ page }: { page: number }) {
+export default function FormProduct({
+  page,
+  id,
+}: {
+  page: number;
+  id?: string;
+}) {
   const form = useForm<z.infer<typeof PortfolioInputSchema>>({
     resolver: zodResolver(PortfolioInputSchema),
     defaultValues: {
@@ -34,10 +45,18 @@ export default function FormProduct({ page }: { page: number }) {
       ended: new Date(),
     },
   });
+  // const [selectedProject, setSelectedProject] = useState<z.infer<
+  //   typeof PortfolioInputSchema
+  // > | null>(null);
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, error, data } = useMutation({
+  const {
+    mutate: addMutate,
+    isPending,
+    error,
+    data,
+  } = useMutation({
     mutationFn: async (data: z.infer<typeof PortfolioInputSchema>) => {
       return await createProject(data);
     },
@@ -49,10 +68,53 @@ export default function FormProduct({ page }: { page: number }) {
       console.error("Error:", err);
     },
   });
+  const { mutate: editMutate } = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: z.infer<typeof PortfolioInputSchema>;
+    }) => {
+      return await updateProject(id, data);
+    },
+    onSuccess: () => {
+      form.reset();
+      queryClient.refetchQueries({ queryKey: ["projects", page] });
+    },
+    onError: (err) => {
+      console.error("Error:", err);
+    },
+  });
 
   const onSubmit = (values: z.infer<typeof PortfolioInputSchema>) => {
-    mutate(values);
+    if (id) {
+      editMutate({ id, data: values });
+      return;
+    }
+    addMutate(values);
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await getProjectById(id ?? "");
+        form.setValue("id", response.id);
+        form.setValue("name", response.name);
+        form.setValue("description", response.description);
+        form.setValue("isPrivate", response.isPrivate);
+        form.setValue("linkRepo", response.linkRepo);
+        form.setValue("image", response.image);
+        form.setValue("started", response.started);
+        form.setValue("ended", response.ended);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (id) {
+      getData();
+    }
+  }, [id]);
 
   return (
     <Form {...form}>
