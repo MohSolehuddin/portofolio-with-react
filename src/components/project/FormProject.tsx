@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";
 
-export default function FormProduct() {
+export default function FormProduct({ page }: { page: number }) {
   const form = useForm<z.infer<typeof PortfolioInputSchema>>({
     resolver: zodResolver(PortfolioInputSchema),
     defaultValues: {
@@ -35,12 +35,15 @@ export default function FormProduct() {
     },
   });
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending, error, data } = useMutation({
     mutationFn: async (data: z.infer<typeof PortfolioInputSchema>) => {
       return await createProject(data);
     },
     onSuccess: () => {
       form.reset();
+      queryClient.refetchQueries({ queryKey: ["projects", page] });
     },
     onError: (err) => {
       console.error("Error:", err);
@@ -124,7 +127,7 @@ export default function FormProduct() {
                 <Input
                   type="date"
                   {...field}
-                  value={field.value.toISOString().split("T")[0]}
+                  value={new Date(field.value).toISOString().split("T")[0]}
                 />
               </FormControl>
               <FormMessage />
@@ -142,7 +145,7 @@ export default function FormProduct() {
                 <Input
                   type="date"
                   {...field}
-                  value={field.value.toISOString().split("T")[0]}
+                  value={new Date(field.value).toISOString().split("T")[0]}
                 />
               </FormControl>
               <FormMessage />
