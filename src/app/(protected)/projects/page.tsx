@@ -1,4 +1,6 @@
 "use client";
+import { deleteProjectById } from "@/app/axios/features/project";
+import TextError from "@/components/erros/TextError";
 import Loading from "@/components/Loading";
 import { CustomPagination } from "@/components/pagination/CustomPagination";
 import FormProduct from "@/components/project/FormProject";
@@ -7,6 +9,7 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useProjects from "@/hooks/useProjects";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FaPen, FaPlus, FaRegEye, FaTrash } from "react-icons/fa";
 
@@ -20,6 +23,17 @@ export default function Page() {
   const { projects, paging, isLoading, error } = useProjects({
     page,
     limit: 10,
+  });
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: (id: string) => {
+      return deleteProjectById(id);
+    },
+    onSuccess: () => {
+      console.log("Successfully deleting project");
+    },
+    onError: (err) => {
+      console.error("Error:", err);
+    },
   });
 
   const handleCheckedPortfolio = (id: string) => {
@@ -40,6 +54,19 @@ export default function Page() {
     }
   };
 
+  const deleteCheckedPortfolio = async () => {
+    try {
+      await Promise.all(
+        listCheckedPortfolio.map(async (id) => {
+          await deleteProjectById(id);
+        })
+      );
+      setListCheckedPortfolio([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleModalOpenChange = () => {
     setIsModalAddProjectOpen(!isModalAddProjectOpen);
   };
@@ -52,23 +79,20 @@ export default function Page() {
     setListCheckedPortfolio([]);
   }, [page]);
 
-  if (isLoading)
-    return (
-      <section className="h-screen flex justify-center items-center">
-        <Loading />
-      </section>
-    );
+  if (isLoading) return <Loading className="h-screen" />;
   if (error)
     return (
-      <section className="h-screen flex justify-center items-center">
-        <p className="text-center text-red-500">Error loading projects.</p>
-      </section>
+      <TextError
+        text={`Error getting projects: ${error.message}`}
+        className="h-screen"
+      />
     );
+
   return (
     <section className="p-6 rounded-xl">
       <section className="flex justify-end gap-4">
         {listCheckedPortfolio.length > 0 && (
-          <Button variant={"destructive"}>
+          <Button variant={"destructive"} onClick={deleteCheckedPortfolio}>
             <FaTrash />
             <p>Delete</p>
           </Button>
@@ -130,7 +154,9 @@ export default function Page() {
                     <FaPen />
                     <p>Edit</p>
                   </Button>
-                  <Button variant={"destructive"}>
+                  <Button
+                    variant={"destructive"}
+                    onClick={() => deleteMutate(project?.id as string)}>
                     <FaTrash />
                     <p>Delete</p>
                   </Button>
