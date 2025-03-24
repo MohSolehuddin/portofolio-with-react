@@ -44,6 +44,21 @@ export const createProject = async (
   }
 };
 
+export const updateProject = async (
+  id: string,
+  data: z.infer<typeof PortfolioInputSchema>
+) => {
+  try {
+    const response = await axiosInstance.put(`/projects/${id}`, data);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
+
 export const deleteProjectById = async (id: string) => {
   try {
     const response = await axiosInstance.delete(`/projects/${id}`);
