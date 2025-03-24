@@ -19,6 +19,9 @@ export default function Page() {
   const [listCheckedPortfolio, setListCheckedPortfolio] = useState<string[]>(
     []
   );
+  const [selectedProjectId, setSelectedProjectId] = useState<
+    string | undefined
+  >(undefined);
 
   const queryClient = useQueryClient();
 
@@ -75,6 +78,10 @@ export default function Page() {
   };
 
   const onAddProject = () => {
+    setIsModalAddProjectOpen(true);
+  };
+  const onEditProject = (id: string | undefined) => {
+    setSelectedProjectId(id);
     setIsModalAddProjectOpen(true);
   };
 
@@ -153,7 +160,10 @@ export default function Page() {
                     <FaRegEye />
                     <p>Details</p>
                   </Button>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      onEditProject(project.id);
+                    }}>
                     <FaPen />
                     <p>Edit</p>
                   </Button>
@@ -187,7 +197,7 @@ export default function Page() {
             <DialogHeader>
               <DialogTitle>Add a Project</DialogTitle>
             </DialogHeader>
-            <FormProduct page={page} />
+            <FormProduct page={page} id={selectedProjectId} />
           </DialogContent>
         </Dialog>
       </section>
