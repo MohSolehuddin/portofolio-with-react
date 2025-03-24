@@ -1,20 +1,14 @@
 import { createErrorLog } from "@/data/errorLog";
-import {
-  getLastUpdate,
-  upsertHistoryOfUpdatingPortfolio,
-} from "@/data/historyOfUpdatingPortfolio";
-import { createPortfolio } from "@/data/portfolio";
-import { github } from "@/lib/github";
+import { createPortfolio, getAllPortfolio } from "@/data/portfolio";
 import { PagingSchema } from "@/lib/schema/pagingSchema";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
-import { db } from "@/server/db";
-import {
-  PortfolioGithubResponse,
-  portfolioMapper,
-} from "@/server/response-mapper/portfolioMapper";
+import getProjectFromGithub from "@/server/actions/getPojectFromGithub";
 
 export async function GET(req: Request) {
   try {
+    (async () => {
+      await getProjectFromGithub();
+    })();
     const { searchParams } = new URL(req.url);
     let page = searchParams.get("page") || 1;
     let limit = searchParams.get("limit") || 10;
@@ -30,82 +24,15 @@ export async function GET(req: Request) {
     page = validatedData.data.page;
     limit = validatedData.data.limit;
 
-    const projects = await github.request("GET /user/repos", {
-      type: "all",
-      per_page: limit,
+    const dataFromDatabase = await getAllPortfolio({
       page,
-      sort: "created",
-      direction: "desc",
+      limit,
+      orderBy: { ended: "desc" },
     });
-
-    const linkHeader = projects.headers.link;
-    const isNext = linkHeader?.includes(`rel="next"`);
-    const isPrev = linkHeader?.includes(`rel="prev"`);
-    const existingLast = linkHeader?.includes(`rel="last"`);
-    let totalPage = 1;
-
-    if (isNext && existingLast) {
-      const lastPattern = /(?<=<)([\S]*)(?=>; rel="last")/i;
-      const lastUrl = linkHeader?.match(lastPattern)?.[0];
-      const numberOfLastPage = new URL(lastUrl ?? "").searchParams.get("page");
-      totalPage = Number(numberOfLastPage ?? 1);
-    }
-    if (isPrev && !existingLast) {
-      const prevPattern = /(?<=<)([\S]*)(?=>; rel="prev")/i;
-      const lastUrl = linkHeader?.match(prevPattern)?.[0];
-      const numberOfLastPage = new URL(lastUrl ?? "").searchParams.get("page");
-      if (numberOfLastPage) {
-        totalPage = Number(numberOfLastPage) + 1;
-      }
-    }
-
-    const data = portfolioMapper(projects.data as PortfolioGithubResponse[]);
     const responseData = {
       message: "Successfully getting projects",
-      data,
-      paging: {
-        page,
-        limit,
-        totalPage,
-      },
+      ...dataFromDatabase,
     };
-
-    const lastUpdate = await getLastUpdate();
-
-    if (lastUpdate.length > 0) {
-      const lastUpdateDate = new Date(lastUpdate[0].lastUpdate);
-      const timeDiff = new Date().getTime() - lastUpdateDate.getTime();
-      const hoursDiff = timeDiff / (1000 * 3600);
-      if (hoursDiff < 24) return Response.json(responseData, { status: 200 });
-    }
-
-    (async () => {
-      for (const project of data) {
-        await db.portfolio.upsert({
-          where: { id: project.id },
-          update: {
-            description: project.description ?? "",
-            isPrivate: project.isPrivate,
-            linkRepo: project.linkRepo,
-            isShow: !project.isPrivate,
-            ended: project.ended,
-            updatedAt: new Date(),
-          },
-          create: {
-            id: project.id,
-            name: project.name,
-            description: project.description ?? "",
-            isPrivate: project.isPrivate,
-            linkRepo: project.linkRepo,
-            image: project.image,
-            started: project.started,
-            ended: project.ended,
-          },
-        });
-      }
-
-      await upsertHistoryOfUpdatingPortfolio();
-    })();
 
     return Response.json(responseData, { status: 200 });
   } catch (error) {
