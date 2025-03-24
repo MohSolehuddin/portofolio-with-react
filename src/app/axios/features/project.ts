@@ -44,6 +44,18 @@ export const createProject = async (
   }
 };
 
+export const deleteProjectById = async (id: string) => {
+  try {
+    const response = await axiosInstance.delete(`/projects/${id}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error);
+    }
+    throw error;
+  }
+};
+
 export const getCountOngoingProject = async () => {
   try {
     const response = await axiosInstance.get(`/projects/ongoing`);
