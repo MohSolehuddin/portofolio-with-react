@@ -7,24 +7,23 @@ interface getAllPortfolioProps {
   page?: number;
   limit?: number;
   orderBy?: Prisma.Enumerable<Prisma.PortfolioOrderByWithRelationInput>;
+  where?: Prisma.PortfolioWhereInput;
 }
 
 export const getAllPortfolio = async ({
   page = 1,
   limit = 10,
   orderBy,
+  where,
 }: getAllPortfolioProps) => {
   const offset = (page - 1) * limit;
   const data = await db.portfolio.findMany({
-    where: {
-      deletedAt: null,
-      isShow: true,
-    },
+    where,
     skip: offset,
     take: limit,
     orderBy,
   });
-  const total = await countTotalProjects();
+  const total = await countTotalProjects({ where });
   return {
     data,
     paging: {
@@ -94,11 +93,13 @@ export const countOngoingProjects = async () => {
   });
 };
 
-export const countTotalProjects = async () => {
+interface countTotalProjectsProps {
+  where?: Prisma.PortfolioWhereInput;
+}
+export const countTotalProjects = async ({
+  where,
+}: countTotalProjectsProps) => {
   return await db.portfolio.count({
-    where: {
-      deletedAt: null,
-      isShow: true,
-    },
+    where,
   });
 };
