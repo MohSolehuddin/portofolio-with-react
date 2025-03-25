@@ -45,9 +45,6 @@ export default function FormProduct({
       ended: new Date(),
     },
   });
-  // const [selectedProject, setSelectedProject] = useState<z.infer<
-  //   typeof PortfolioInputSchema
-  // > | null>(null);
 
   const queryClient = useQueryClient();
 

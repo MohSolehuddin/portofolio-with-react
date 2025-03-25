@@ -4,6 +4,7 @@ import TextError from "@/components/erros/TextError";
 import Loading from "@/components/Loading";
 import { CustomPagination } from "@/components/pagination/CustomPagination";
 import FormProduct from "@/components/project/FormProject";
+import ProjectDetail from "@/components/project/ProjectDetail";
 import { Button } from "@/components/ui/button";
 import { DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -16,12 +17,19 @@ import { FaPen, FaPlus, FaRegEye, FaTrash } from "react-icons/fa";
 export default function Page() {
   const [page, setPage] = useState(1);
   const [isModalAddProjectOpen, setIsModalAddProjectOpen] = useState(false);
+  const [isModalDetailsProjectOpen, setIsModalDetailsProjectOpen] =
+    useState(false);
   const [listCheckedPortfolio, setListCheckedPortfolio] = useState<string[]>(
     []
   );
-  const [selectedProjectId, setSelectedProjectId] = useState<
-    string | undefined
-  >(undefined);
+  const [
+    selectedProjectIdForUpdatingProject,
+    setSelectedProjectIdForUpdatingProject,
+  ] = useState<string | undefined>(undefined);
+  const [
+    selectedProjectIdForShowingDetailsOfProject,
+    setSelectedProjectIdForShowingDetailsOfProject,
+  ] = useState<string | undefined>(undefined);
 
   const queryClient = useQueryClient();
 
@@ -74,20 +82,31 @@ export default function Page() {
   };
 
   const handleModalOpenChange = () => {
-    setIsModalAddProjectOpen(!isModalAddProjectOpen);
+    setIsModalAddProjectOpen(false);
+    setIsModalDetailsProjectOpen(false);
   };
 
   const onAddProject = () => {
     setIsModalAddProjectOpen(true);
   };
+
   const onEditProject = (id: string | undefined) => {
-    setSelectedProjectId(id);
     setIsModalAddProjectOpen(true);
+    setSelectedProjectIdForUpdatingProject(id);
+  };
+  const onShoDetailsProject = (id: string | undefined) => {
+    setIsModalDetailsProjectOpen(true);
+    setSelectedProjectIdForShowingDetailsOfProject(id);
   };
 
   useEffect(() => {
     setListCheckedPortfolio([]);
   }, [page]);
+  useEffect(() => {
+    console.log("Is modal details project open", isModalDetailsProjectOpen);
+    //   console.log("Is modal add project open", isModalDetailsProjectOpen);
+    // }, [isModalDetailsProjectOpen, isModalAddProjectOpen]);
+  }, [isModalDetailsProjectOpen]);
 
   if (isLoading) return <Loading className="h-screen" />;
   if (error)
@@ -156,7 +175,8 @@ export default function Page() {
                 </td>
                 <td className="p-4">{project.linkRepo}</td>
                 <td className="p-4 flex gap-4">
-                  <Button>
+                  <Button
+                    onClick={() => onShoDetailsProject(project?.id as string)}>
                     <FaRegEye />
                     <p>Details</p>
                   </Button>
@@ -186,18 +206,27 @@ export default function Page() {
       />
       <section
         className={`${
-          isModalAddProjectOpen
+          isModalAddProjectOpen || isModalDetailsProjectOpen
             ? "absolute top-0 left-0 bg-dark/30 dark:bg-white/30  w-screen h-screen flex justify-center items-center"
             : "hidden"
         }`}>
         <Dialog
-          open={isModalAddProjectOpen}
+          open={isModalAddProjectOpen || isModalDetailsProjectOpen}
           onOpenChange={handleModalOpenChange}>
-          <DialogContent className="sm:max-w-[425px] w-full p-6 rounded-lg bg-white dark:bg-dark">
+          <DialogContent className="sm:max-w-[425px] min-w-[300px] w-full p-6 rounded-lg bg-white dark:bg-dark">
             <DialogHeader>
-              <DialogTitle>Add a Project</DialogTitle>
+              <DialogTitle>
+                {isModalAddProjectOpen ? "Add Project" : "Details"}
+              </DialogTitle>
             </DialogHeader>
-            <FormProduct page={page} id={selectedProjectId} />
+            {isModalAddProjectOpen ? (
+              <FormProduct
+                page={page}
+                id={selectedProjectIdForUpdatingProject}
+              />
+            ) : (
+              <ProjectDetail id={selectedProjectIdForShowingDetailsOfProject} />
+            )}
           </DialogContent>
         </Dialog>
       </section>
