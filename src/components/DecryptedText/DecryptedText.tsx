@@ -164,6 +164,7 @@ export default function DecryptedText({
     return () => {
       if (interval) clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isHovering,
     text,

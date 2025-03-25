@@ -24,6 +24,13 @@ import { useEffect } from "react";
 import { z } from "zod";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export default function FormProduct({
   page,
@@ -111,6 +118,7 @@ export default function FormProduct({
     if (id) {
       getData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
@@ -170,6 +178,32 @@ export default function FormProduct({
               <FormLabel>Image URL</FormLabel>
               <FormControl>
                 <Input placeholder="Image URL" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isPrivate"
+          render={() => (
+            <FormItem>
+              <FormLabel>Image URL</FormLabel>
+              <FormControl>
+                <Select
+                  // {...field}
+                  onValueChange={(value) => {
+                    form.setValue("isPrivate", value === "true");
+                  }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a value" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Private</SelectItem>
+                    <SelectItem value="false">Public</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
