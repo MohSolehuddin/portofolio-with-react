@@ -1,8 +1,28 @@
 import { createErrorLog } from "@/data/errorLog";
 import { createPortfolio, getAllPortfolio } from "@/data/portfolio";
+import { validateToken } from "@/lib/jwt/validateToken";
 import { PagingSchema } from "@/lib/schema/pagingSchema";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import getProjectFromGithub from "@/server/actions/getPojectFromGithub";
+import { Prisma } from "@prisma/client";
+
+interface filtersInterface {
+  where: Prisma.PortfolioWhereInput;
+}
+
+const getFiltersForUserOrAdmin = async (req: Request) => {
+  const isTokenValid = await validateToken(req);
+
+  const filters: filtersInterface = {
+    where: {
+      deletedAt: null,
+      isShow: true,
+    },
+  };
+
+  if (!isTokenValid) return filters;
+  return (filters.where = {});
+};
 
 export async function GET(req: Request) {
   try {
@@ -24,11 +44,15 @@ export async function GET(req: Request) {
     page = validatedData.data.page;
     limit = validatedData.data.limit;
 
+    const filters = await getFiltersForUserOrAdmin(req);
+    console.log({ filters });
     const dataFromDatabase = await getAllPortfolio({
       page,
       limit,
       orderBy: { ended: "desc" },
+      ...filters,
     });
+
     const responseData = {
       message: "Successfully getting projects",
       ...dataFromDatabase,
