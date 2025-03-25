@@ -5,6 +5,8 @@ export const PortfolioSchema = z.object({
   name: z.string(),
   description: z.string(),
   isPrivate: z.boolean().optional(),
+  isShow: z.boolean().optional(),
+  completedAt: z.coerce.date().optional(),
   linkRepo: z.string().url().optional(),
   image: z.string().url().optional(),
   started: z.coerce.date(),
@@ -18,4 +20,4 @@ export const PortfolioInputSchema = PortfolioSchema.extend({
   deletedAt: z.date().nullable().optional(),
 });
 
-export type PortfolioInputType = z.infer<typeof PortfolioSchema>;
+export type PortfolioInputType = z.infer<typeof PortfolioInputSchema>;
