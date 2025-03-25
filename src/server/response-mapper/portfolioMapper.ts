@@ -14,7 +14,7 @@ export interface PortfolioGithubResponse {
 export const portfolioMapper = (data: PortfolioGithubResponse[]) => {
   return data.map((project) => ({
     id: project.id.toString(),
-    name: project.name,
+    name: project.name.split("-").join(" "),
     description: project.description,
     isPrivate: project.private,
     linkRepo: project.html_url,
