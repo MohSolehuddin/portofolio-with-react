@@ -6,31 +6,21 @@ import { useForm } from "react-hook-form";
 import {
   createProject,
   getProjectById,
+  makeProjectCompleted,
+  makeProjectOngoing,
   updateProject,
 } from "@/app/axios/features/project";
+import AlertSuccess from "@/components/alerts/AlertSuccess";
+import { AlertError } from "@/components/alerts/error";
+import ReactHookFormBooleanInput from "@/components/input/ReactHookFormBooleanInput";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
-import AlertSuccess from "../alerts/AlertSuccess";
-import { AlertError } from "../alerts/error";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import ReactHookFormDateInput from "../input/ReactHookFormDateInput";
+import ReactHookFormTextInput from "../input/ReactHookFormTextInput";
 
 export default function FormProduct({
   page,
@@ -46,12 +36,14 @@ export default function FormProduct({
       name: "",
       description: undefined,
       isPrivate: false,
+      isShow: true,
       linkRepo: "",
       image: "",
       started: new Date(),
       ended: new Date(),
     },
   });
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -90,6 +82,20 @@ export default function FormProduct({
       console.error("Error:", err);
     },
   });
+  const { mutate: toggleCompleteMutate } = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      if (isCompleted) {
+        return await makeProjectOngoing(id);
+      }
+      return await makeProjectCompleted(id);
+    },
+    onSuccess: () => {
+      setIsCompleted(!isCompleted);
+    },
+    onError: (err) => {
+      console.error("Error:", err);
+    },
+  });
 
   const onSubmit = (values: z.infer<typeof PortfolioInputSchema>) => {
     if (id) {
@@ -99,18 +105,30 @@ export default function FormProduct({
     addMutate(values);
   };
 
+  const toggleCompletedProject = () => {
+    toggleCompleteMutate({ id: id ?? "" });
+    // console.log("completedAt", form.getValues("completedAt"));
+    // if (form.getValues("completedAt")) {
+    //   form.setValue("completedAt", undefined);
+    // } else {
+    //   const currentDate = new Date();
+    //   form.setValue("completedAt", currentDate);
+    // }
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await getProjectById(id ?? "");
-        form.setValue("id", response.id);
         form.setValue("name", response.name);
         form.setValue("description", response.description);
-        form.setValue("isPrivate", response.isPrivate);
         form.setValue("linkRepo", response.linkRepo);
         form.setValue("image", response.image);
+        form.setValue("isPrivate", response.isPrivate);
+        form.setValue("isShow", response.isShow);
         form.setValue("started", response.started);
         form.setValue("ended", response.ended);
+        if (response.completedAt) setIsCompleted(true);
       } catch (error) {
         console.log(error);
       }
@@ -124,127 +142,34 @@ export default function FormProduct({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Project Name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
+        <ReactHookFormTextInput form={form} name="name" label="Project Name" />
+        <ReactHookFormTextInput
+          form={form}
           name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Description"
-                  {...field}
-                  value={field.value ?? ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Description"
         />
-
-        <FormField
-          control={form.control}
+        <ReactHookFormTextInput
+          form={form}
           name="linkRepo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Repository Link</FormLabel>
-              <FormControl>
-                <Input placeholder="Repository Link" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Repository Link"
         />
-
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="Image URL" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
+        <ReactHookFormTextInput form={form} name="image" label="Image URL" />
+        <ReactHookFormBooleanInput
+          form={form}
           name="isPrivate"
-          render={() => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Select
-                  // {...field}
-                  onValueChange={(value) => {
-                    form.setValue("isPrivate", value === "true");
-                  }}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a value" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="true">Private</SelectItem>
-                    <SelectItem value="false">Public</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Private Repository"
         />
-
-        <FormField
-          control={form.control}
-          name="started"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Start Date</FormLabel>
-              <FormControl>
-                <Input
-                  type="date"
-                  {...field}
-                  value={new Date(field.value).toISOString().split("T")[0]}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <ReactHookFormBooleanInput
+          form={form}
+          name="isShow"
+          label="Show on Portfolio"
+          selectItemLabels={{ true: "Show", false: "Hide" }}
         />
-
-        <FormField
-          control={form.control}
-          name="ended"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>End Date</FormLabel>
-              <FormControl>
-                <Input
-                  type="date"
-                  {...field}
-                  value={new Date(field.value).toISOString().split("T")[0]}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <ReactHookFormDateInput form={form} name="started" label="Start Date" />
+        <ReactHookFormDateInput form={form} name="ended" label="End Date" />
+        <Button type="button" onClick={toggleCompletedProject}>
+          {isCompleted ? "Make Incomplete" : "Make Complete"}
+        </Button>
 
         <AlertError message={error?.message ?? ""} />
         <AlertSuccess message={data?.message ?? ""} />
