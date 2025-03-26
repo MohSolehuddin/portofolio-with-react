@@ -57,8 +57,6 @@ export const updatePortfolio = async (
   return await db.portfolio.update({
     where: {
       id,
-      deletedAt: null,
-      isShow: true,
     },
     data,
   });
