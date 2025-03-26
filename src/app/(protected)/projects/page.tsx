@@ -181,6 +181,20 @@ export default function Page() {
                     <p>Details</p>
                   </Button>
                   <Button
+                    onClick={() => onShoDetailsProject(project?.id as string)}>
+                    {project.isShow ? (
+                      <>
+                        <FaRegEye />
+                        <p>Hide</p>
+                      </>
+                    ) : (
+                      <>
+                        <FaRegEye />
+                        <p>Show</p>
+                      </>
+                    )}
+                  </Button>
+                  <Button
                     onClick={() => {
                       onEditProject(project.id);
                     }}>
