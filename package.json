@@ -26,6 +26,7 @@
     "axios": "^1.8.2",
     "bcrypt-edge": "^0.1.0",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",
     "input-otp": "^1.4.2",
