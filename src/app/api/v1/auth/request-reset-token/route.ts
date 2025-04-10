@@ -6,7 +6,8 @@ export async function POST(req: Request) {
   const { email } = await req.json();
 
   const existingUser = await getUserByEmail(email);
-  if (!existingUser) return { error: "User not found" };
+  if (!existingUser)
+    return Response.json({ error: "User not found" }, { status: 400 });
 
   const createdToken = Crypto.randomBytes(64).toString("hex");
   const expires = new Date(Date.now() + 3600 * 1000);
