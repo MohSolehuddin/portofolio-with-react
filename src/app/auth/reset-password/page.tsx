@@ -26,21 +26,21 @@ export default function Home() {
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const ForgotPasswordSchema = z.object({
+  const ResetPasswordSchema = z.object({
     token: z.string(),
     password: z.string().min(MIN_PASSWORD_LENGTH, {
       message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
     }),
   });
-  const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
-    resolver: zodResolver(ForgotPasswordSchema),
+  const form = useForm<z.infer<typeof ResetPasswordSchema>>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       token: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof ForgotPasswordSchema>) => {
+  const onSubmit = async (data: z.infer<typeof ResetPasswordSchema>) => {
     const response = await resetPassword({ token, password: data.password });
     if (response) return setError(response.error);
     setSuccess(response.message);
