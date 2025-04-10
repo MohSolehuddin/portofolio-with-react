@@ -3,6 +3,7 @@ import { NavBar } from "@/components/Header/Navbar";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-screen px-12`}>
         <SessionProvider>
-          <NavBar />
-          {children}
+          <Suspense>
+            <NavBar />
+            {children}
+          </Suspense>
         </SessionProvider>
       </body>
     </html>
