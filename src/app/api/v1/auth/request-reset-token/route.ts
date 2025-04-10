@@ -1,25 +1,32 @@
+import { getUserByEmail } from "@/data/user";
 import { createVerificationToken } from "@/data/verificationToken";
 import senEmailVerification from "@/lib/sendEmailVerification";
-import { getToken } from "next-auth/jwt";
 import Crypto from "node:crypto";
 export async function POST(req: Request) {
-  const sessionToken = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const { email } = await req.json();
+
+  const existingUser = await getUserByEmail(email);
+  if (!existingUser) return { error: "User not found" };
 
   const createdToken = Crypto.randomBytes(64).toString("hex");
   const expires = new Date(Date.now() + 3600 * 1000);
   const createdVerificationToken = await createVerificationToken(
-    sessionToken?.email as string,
+    email,
     createdToken,
     expires
   );
 
   const linkVerification = `${process.env.DOMAIN}/auth/reset-password?token=${createdVerificationToken.token}`;
   await senEmailVerification(
-    sessionToken?.email as string,
+    email,
     linkVerification,
-    sessionToken?.name as string
+    existingUser.name,
+    "Reset your password"
   );
-  return {
-    message: "Password reset successfully",
-  };
+  return Response.json(
+    {
+      message: "Password reset successfully",
+    },
+    { status: 200 }
+  );
 }
