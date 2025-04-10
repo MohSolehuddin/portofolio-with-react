@@ -18,7 +18,10 @@ export const resetPassword = async (data: {
 
 export const forgotPassword = async (data: { email: string }) => {
   try {
-    const response = await axiosInstance.post(`/auth/forgot-password`, data);
+    const response = await axiosInstance.post(
+      `/auth/request-reset-token`,
+      data
+    );
     return response.data.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
