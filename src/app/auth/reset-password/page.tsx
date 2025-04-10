@@ -12,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MIN_PASSWORD_LENGTH } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -26,27 +25,29 @@ export default function Home() {
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
 
-  const ResetPasswordSchema = z.object({
-    token: z.string(),
-    password: z.string().min(MIN_PASSWORD_LENGTH, {
-      message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
-    }),
-  });
-  const form = useForm<z.infer<typeof ResetPasswordSchema>>({
-    resolver: zodResolver(ResetPasswordSchema),
+  const ForgotPasswordSchema = z
+    .object({
+      token: z.string(),
+      password: z.string(),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+  const form = useForm<z.infer<typeof ForgotPasswordSchema>>({
+    resolver: zodResolver(ForgotPasswordSchema),
     defaultValues: {
       token: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof ResetPasswordSchema>) => {
+  const onSubmit = async (data: z.infer<typeof ForgotPasswordSchema>) => {
     const response = await resetPassword({ token, password: data.password });
-    if (response) return setError(response.error);
+    if (response.error) return setError(response.error);
     setSuccess(response.message);
-    setTimeout(() => {
-      window.location.href = "/auth/login";
-    }, 2000);
   };
 
   return (
@@ -66,11 +67,22 @@ export default function Home() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <InputPassword {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <AlertError message={error} />
-          <AlertSuccess
-            message={success && success + " Redirecting in 2 seconds..."}
-          />
+          <AlertSuccess message={success} />
           <Button>Reset password</Button>
         </form>
       </section>
