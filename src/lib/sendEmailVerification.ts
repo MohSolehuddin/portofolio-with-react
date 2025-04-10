@@ -6,7 +6,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export default async function senEmailVerification(
   email: string,
   link: string,
-  name: string
+  name: string,
+  message?: string
 ) {
   const { data, error } = await resend.emails.send({
     from: "Msytc <onboarding@resend.dev>",
@@ -14,7 +15,9 @@ export default async function senEmailVerification(
     subject: "Confirm your email",
     html: `
             <div>
-              <h1>Hallo, ${name}, Please click link here for verify your email</h1>
+              <h1>Hallo, ${name}, ${
+      message ?? "Please click link here for to verify your email"
+    }</h1>
               <a href=${link}>Click here to verify</a>
               <br/>
               <br/>
