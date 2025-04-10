@@ -16,9 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/lib/schema/loginSchema";
-import login from "@/server/actions/login";
+import login from "@/server/actions/auth/login";
 import { Dialog } from "@radix-ui/react-dialog";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";
@@ -142,6 +143,8 @@ export function FormLogin() {
             </FormItem>
           )}
         />
+
+        <Link href="/auth/forgot-password">Forgot password?</Link>
 
         <Dialog open={isOTPModalOpen} onOpenChange={handleModalOpenChange}>
           <DialogContent className="sm:max-w-[425px]">

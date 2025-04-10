@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/lib/schema/loginSchema";
-import login from "@/server/actions/login";
+import login from "@/server/actions/auth/login";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";
 

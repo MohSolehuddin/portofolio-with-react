@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerInputSchema } from "@/lib/schema/registerSchema";
-import register from "@/server/actions/register";
+import register from "@/server/actions/auth/register";
 import { useState } from "react";
 import AlertSuccess from "../alerts/AlertSuccess";
 import { AlertError } from "../alerts/error";

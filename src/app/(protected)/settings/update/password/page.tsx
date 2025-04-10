@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { updatePasswordSchema } from "@/lib/schema/updatePasswordSchema";
-import { updatePassword } from "@/server/actions/updatePassword";
+import { updatePassword } from "@/server/actions/auth/updatePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

@@ -6,7 +6,7 @@ import { LoginSchema } from "@/lib/schema/loginSchema";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { z } from "zod";
-import { verify2fa } from "./2fa/verify";
+import { verify2fa } from "../2fa/verify";
 
 export default async function login(values: z.infer<typeof LoginSchema>) {
   const validated = LoginSchema.safeParse(values);
