@@ -8,6 +8,7 @@ export const ACCEPTED_IMAGE_TYPES = [
 export const MIN_PASSWORD_LENGTH = 8;
 export const MIN_NAME_LENGTH = 2;
 export const JWT_EXPIRATION_IN_HOURS = 3600;
+export const MAX_SEND_MESSAGE_PER_30_SECONDS = 1;
 export const colors = {
   light: "#fbfbfb",
   dark: "#021526",
