@@ -1,5 +1,6 @@
 "use client";
 
+import Contact from "@/components/home/Contact";
 import ContainerHome from "@/components/home/ContainerHome";
 import HeroSection from "@/components/home/HeroSection";
 import MySkill from "@/components/home/MySkill";
@@ -11,6 +12,7 @@ export default function Page() {
       <HeroSection />
       <Products />
       <MySkill />
+      <Contact />
     </ContainerHome>
   );
 }
