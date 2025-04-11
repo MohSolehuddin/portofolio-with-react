@@ -96,10 +96,27 @@ model SocialMedia {
   link String @unique
 }
 
+model ContactMessage {
+  id String @id @default(uuid())
+  from String
+  phoneNumber String? @db.VarChar(10)
+  email String
+  message String
+}
+
+model HistoryOfSendingMessage {
+  id String @id @default(uuid())
+  ip String @unique
+  count Int
+  createdAt DateTime
+  updatedAt DateTime
+}
+
 enum ErrorType {
   ERROR
   WARNING
 }
+
 model ErrorLog {
   id String @id @default(uuid())
   type ErrorType @default(ERROR)
