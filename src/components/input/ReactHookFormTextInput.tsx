@@ -13,6 +13,7 @@ interface ReactHookFormTextInputProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
   placeholder?: string;
+  className?: string;
 }
 
 export default function ReactHookFormTextInput<T extends FieldValues>({
@@ -20,6 +21,7 @@ export default function ReactHookFormTextInput<T extends FieldValues>({
   name,
   label,
   placeholder,
+  className,
 }: ReactHookFormTextInputProps<T>) {
   return (
     <FormField
@@ -42,6 +44,7 @@ export default function ReactHookFormTextInput<T extends FieldValues>({
               onBlur={field.onBlur}
               ref={field.ref}
               name={field.name}
+              className={className ?? ""}
             />
           </FormControl>
           <FormMessage />
