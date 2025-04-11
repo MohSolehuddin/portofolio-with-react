@@ -26,6 +26,9 @@ export default function Contact() {
   const [success, setSuccess] = useState<string>("");
 
   const onSubmit = async (values: z.infer<typeof ContactSchema>) => {
+    setError("");
+    setSuccess("");
+
     const response = await sendMessage(values);
     if (response.error) return setError(response.error);
     setSuccess(response.message);
