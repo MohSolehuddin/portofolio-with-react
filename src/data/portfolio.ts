@@ -62,6 +62,17 @@ export const updatePortfolio = async (
   });
 };
 
+export const updatePortfolioImage = async (id: string, image: string) => {
+  return await db.portfolio.update({
+    where: {
+      id,
+    },
+    data: {
+      image,
+    },
+  });
+};
+
 export const deletePortfolio = async (id: string) => {
   return await db.portfolio.delete({ where: { id } });
 };
