@@ -3,8 +3,6 @@ import { deletePortfolio, updatePortfolio } from "@/data/portfolio";
 import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
 import { db } from "@/server/db";
 
-export const runtime = "nodejs";
-
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
