@@ -15,6 +15,8 @@ import getProjectFromGithub from "@/server/actions/getPojectFromGithub";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
+export const runtime = "nodejs";
+
 interface filtersInterface {
   where: Prisma.PortfolioWhereInput;
 }
