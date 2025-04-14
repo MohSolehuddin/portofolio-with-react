@@ -1,10 +1,19 @@
 import { createErrorLog } from "@/data/errorLog";
-import { createPortfolio, getAllPortfolio } from "@/data/portfolio";
+import {
+  createPortfolio,
+  getAllPortfolio,
+  updatePortfolioImage,
+} from "@/data/portfolio";
+import { uploadToCloudinary } from "@/lib/cloudinary/cloudinary";
 import { validateToken } from "@/lib/jwt/validateToken";
 import { PagingSchema } from "@/lib/schema/pagingSchema";
-import { PortfolioSchema } from "@/lib/schema/portfolioSchema";
+import {
+  PortfolioInputSchema,
+  PortfolioSchema,
+} from "@/lib/schema/portfolioSchema";
 import getProjectFromGithub from "@/server/actions/getPojectFromGithub";
 import { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 interface filtersInterface {
   where: Prisma.PortfolioWhereInput;
@@ -70,19 +79,46 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
-    const validatedData = PortfolioSchema.safeParse(data);
-    if (!validatedData.success)
-      return Response.json(validatedData.error, { status: 400 });
+    const formData = await req.formData();
+    const data = Object.fromEntries(formData);
+    const transformDataToValidateData = {
+      ...data,
+      isPrivate: data.isPrivate === "true",
+      isShow: data.isShow === "true",
+    };
 
-    const portfolioData = validatedData.data;
-    if (!portfolioData.id) portfolioData.id = undefined;
-    const createdPortfolio = await createPortfolio(portfolioData);
+    const validatedData = PortfolioInputSchema.safeParse(
+      transformDataToValidateData
+    );
+    if (!validatedData.success) {
+      return Response.json({ error: validatedData.error }, { status: 400 });
+    }
+
+    const dataForCreatingPortfolio: z.infer<typeof PortfolioSchema> = {
+      ...validatedData.data,
+      id: validatedData.data.id || undefined,
+      image: "https://msytc.vercel.app/uploading.svg",
+    };
+    const createdPortfolio = await createPortfolio(dataForCreatingPortfolio);
+
+    (async () => {
+      let imageUrl: string | undefined;
+      if (validatedData.data.image) {
+        const fileBuffer = await validatedData.data.image.arrayBuffer();
+        const buffer = Buffer.from(fileBuffer);
+        const uploadedImage = await uploadToCloudinary(buffer);
+
+        imageUrl = uploadedImage.secure_url as string;
+        await updatePortfolioImage(createdPortfolio.id, imageUrl);
+      }
+    })();
+
     return Response.json({ data: createdPortfolio }, { status: 200 });
   } catch (error) {
+    console.log(error);
     const createdError = await createErrorLog(JSON.stringify(error));
     return Response.json(
-      { message: "Something went wrong", requestId: createdError?.id },
+      { error: "Something went wrong", requestId: createdError?.id },
       { status: 500 }
     );
   }
