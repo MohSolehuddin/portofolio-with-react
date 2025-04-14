@@ -1,6 +1,9 @@
 "use client";
 import { getProjects } from "@/app/axios/features/project";
-import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
+import {
+  PortfolioInputSchema,
+  PortfolioResponseSchema,
+} from "@/lib/schema/portfolioSchema";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -24,7 +27,7 @@ export default function useProjects({
   });
 
   const validatedProjects = data
-    ? PortfolioInputSchema.array().safeParse(data.data)
+    ? PortfolioResponseSchema.array().safeParse(data.data)
     : {
         success: false,
         data: [],
