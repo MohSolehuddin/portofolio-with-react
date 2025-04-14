@@ -14,13 +14,35 @@ import AlertSuccess from "@/components/alerts/AlertSuccess";
 import { AlertError } from "@/components/alerts/error";
 import ReactHookFormBooleanInput from "@/components/input/ReactHookFormBooleanInput";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import ReactHookFormDateInput from "../input/ReactHookFormDateInput";
 import ReactHookFormTextInput from "../input/ReactHookFormTextInput";
+import { Input } from "../ui/input";
+
+interface FileInputProps {
+  onChange: (file: File | null) => void;
+  accept: string;
+}
+
+const FileInput: React.FC<FileInputProps> = ({ onChange, accept }) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    onChange(file || null);
+  };
+
+  return <Input type="file" accept={accept} onChange={handleFileChange} />;
+};
 
 export default function FormProduct({
   page,
@@ -38,7 +60,7 @@ export default function FormProduct({
       isPrivate: false,
       isShow: true,
       linkRepo: "",
-      image: "",
+      image: undefined,
       started: new Date(),
       ended: new Date(),
     },
@@ -153,7 +175,29 @@ export default function FormProduct({
           name="linkRepo"
           label="Repository Link"
         />
-        <ReactHookFormTextInput form={form} name="image" label="Image URL" />
+        {/* <ReactHookFormTextInput form={form} name="image" label="Image URL" /> */}
+
+        <FormField
+          control={form.control}
+          name="image"
+          render={({}) => (
+            <FormItem>
+              <FormLabel>Image</FormLabel>
+              <FormControl>
+                <FileInput
+                  onChange={(file) => {
+                    if (file) {
+                      form.setValue("image", file);
+                    }
+                  }}
+                  accept="image/*"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <ReactHookFormBooleanInput
           form={form}
           name="isPrivate"
