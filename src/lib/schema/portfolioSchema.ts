@@ -30,20 +30,37 @@ export const PortfolioSchema = z.object({
   deletedAt: z.date().optional(),
 });
 
+// export const PortfolioInputSchema = PortfolioSchema.extend({
+//   image: z
+//     .instanceof(File)
+//     .refine(
+//       (file) => {
+//         if (file === undefined) return true;
+//         return (
+//           typeof file.name === "string" &&
+//           typeof file.size === "number" &&
+//           typeof file.type === "string"
+//         );
+//       },
+//       {
+//         message: "The image must be a valid file.",
+//       }
+//     )
+//     .optional(),
+// });
+
 export const PortfolioInputSchema = PortfolioSchema.extend({
   image: z
-    .instanceof(File)
+    .any()
     .refine(
-      (file) => {
-        if (file === undefined) return true;
-        return (
+      (file) =>
+        file === undefined ||
+        (file &&
           typeof file.name === "string" &&
           typeof file.size === "number" &&
-          typeof file.type === "string"
-        );
-      },
+          typeof file.type === "string"),
       {
-        message: "The image must be a valid file.",
+        message: "Invalid file",
       }
     )
     .optional(),
