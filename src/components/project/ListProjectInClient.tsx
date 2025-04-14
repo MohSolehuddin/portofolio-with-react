@@ -1,5 +1,5 @@
 "use client";
-import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
+import { PortfolioResponseSchema } from "@/lib/schema/portfolioSchema";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,7 @@ const Product = memo(function Product({
   started,
   isPrivate,
   ended,
-}: z.infer<typeof PortfolioInputSchema>) {
+}: z.infer<typeof PortfolioResponseSchema>) {
   const { theme } = useTheme();
 
   const spotlightColor = useMemo(
