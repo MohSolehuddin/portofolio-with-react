@@ -117,19 +117,13 @@ model WorkExperience {
   deletedAt DateTime?
 }
 
-model Certification {
-  id String @id @default(uuid())
-  from String
-  YearOfCertificate DateTime
-  DurationOfTrainingCompletionInWeek Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime?
-  deletedAt DateTime?
-}
-
 model Article {
   id String @id @default(uuid())
-
+  title String
+  value String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model HistoryOfSendingMessage {
