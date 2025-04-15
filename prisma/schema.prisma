@@ -105,6 +105,23 @@ model ContactMessage {
   message String
 }
 
+model WorkExperience {
+  id String @id @default(uuid())
+  companyName String
+  companyAddress String
+  position String
+  started DateTime
+  ended DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+}
+
+model Article {
+  id String @id @default(uuid())
+
+}
+
 model HistoryOfSendingMessage {
   id String @id @default(uuid())
   ip String @unique
