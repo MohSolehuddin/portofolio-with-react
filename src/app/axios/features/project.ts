@@ -30,20 +30,25 @@ export const getProjectById = async (id: string) => {
   }
 };
 
+const createProjectFormData = (data: z.infer<typeof PortfolioInputSchema>) => {
+  const formData = new FormData();
+  formData.append("id", data.id || "");
+  formData.append("name", data.name);
+  formData.append("description", data.description);
+  formData.append("isPrivate", data.isPrivate ? "true" : "false");
+  formData.append("isShow", data.isShow ? "true" : "false");
+  formData.append("linkRepo", data.linkRepo ?? "");
+  formData.append("image", data.image ?? "");
+  formData.append("started", data.started?.toDateString() ?? "");
+  formData.append("ended", data.ended?.toDateString() ?? "");
+  return formData;
+};
+
 export const createProject = async (
   data: z.infer<typeof PortfolioInputSchema>
 ) => {
   try {
-    const formData = new FormData();
-    formData.append("id", data.id || "");
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("isPrivate", data.isPrivate ? "true" : "false");
-    formData.append("isShow", data.isShow ? "true" : "false");
-    formData.append("linkRepo", data.linkRepo ?? "");
-    formData.append("image", data.image ?? "");
-    formData.append("started", data.started?.toDateString() ?? "");
-    formData.append("ended", data.ended?.toDateString() ?? "");
+    const formData = createProjectFormData(data);
     const response = await axiosInstance.post(`/projects`, formData);
     return response.data.data;
   } catch (error: unknown) {
@@ -59,7 +64,8 @@ export const updateProject = async (
   data: z.infer<typeof PortfolioInputSchema>
 ) => {
   try {
-    const response = await axiosInstance.put(`/projects/${id}`, data);
+    const formData = createProjectFormData(data);
+    const response = await axiosInstance.put(`/projects/${id}`, formData);
     return response.data.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
