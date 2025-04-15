@@ -31,6 +31,11 @@ const uploadToCloudinary = (buffer: Buffer): Promise<UploadApiResponse> => {
   });
 };
 
+const updateImageInCloudinary = async (publicId: string, buffer: Buffer) => {
+  await deleteFromCloudinary(publicId);
+  return await uploadToCloudinary(buffer);
+};
+
 /**
  * Hapus file dari Cloudinary berdasarkan publicId
  * @param publicId ID publik dari file di Cloudinary
@@ -47,4 +52,9 @@ const deleteFromCloudinary = (
   });
 };
 
-export { cloudinary, deleteFromCloudinary, uploadToCloudinary };
+export {
+  cloudinary,
+  deleteFromCloudinary,
+  updateImageInCloudinary,
+  uploadToCloudinary,
+};
