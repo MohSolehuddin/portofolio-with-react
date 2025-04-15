@@ -95,6 +95,9 @@ model SocialMedia {
   type SocialMediaTYPE @default(WEBSITE)
   name String
   link String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model ContactMessage {
@@ -103,6 +106,9 @@ model ContactMessage {
   phoneNumber String? @db.VarChar(10)
   email String
   message String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model WorkExperience {
@@ -113,7 +119,7 @@ model WorkExperience {
   started DateTime
   ended DateTime
   createdAt DateTime @default(now())
-  updatedAt DateTime?
+  updatedAt DateTime @updatedAt
   deletedAt DateTime?
 }
 
@@ -141,7 +147,7 @@ model HistoryOfSendingMessage {
   ip String @unique
   count Int
   createdAt DateTime
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 enum ErrorType {
