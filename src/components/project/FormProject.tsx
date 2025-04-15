@@ -1,8 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
 import {
   createProject,
   getProjectById,
@@ -13,36 +10,17 @@ import {
 import AlertSuccess from "@/components/alerts/AlertSuccess";
 import { AlertError } from "@/components/alerts/error";
 import ReactHookFormBooleanInput from "@/components/input/ReactHookFormBooleanInput";
+import ReactHookFormDateInput from "@/components/input/ReactHookFormDateInput";
+import ReactHookFormFileInput from "@/components/input/ReactHookFormFileInput";
+import ReactHookFormTextInput from "@/components/input/ReactHookFormTextInput";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { PortfolioInputSchema } from "@/lib/schema/portfolioSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ReactHookFormDateInput from "../input/ReactHookFormDateInput";
-import ReactHookFormTextInput from "../input/ReactHookFormTextInput";
-import { Input } from "../ui/input";
-
-interface FileInputProps {
-  onChange: (file: File | null) => void;
-  accept: string;
-}
-
-const FileInput: React.FC<FileInputProps> = ({ onChange, accept }) => {
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    onChange(file || null);
-  };
-
-  return <Input type="file" accept={accept} onChange={handleFileChange} />;
-};
 
 export default function FormProduct({
   page,
@@ -66,6 +44,17 @@ export default function FormProduct({
     },
   });
   const [isCompleted, setIsCompleted] = useState(false);
+  // use for showing image in update case
+  const [imageLink, setImageLink] = useState("");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleFileChange = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const queryClient = useQueryClient();
 
@@ -129,13 +118,6 @@ export default function FormProduct({
 
   const toggleCompletedProject = () => {
     toggleCompleteMutate({ id: id ?? "" });
-    // console.log("completedAt", form.getValues("completedAt"));
-    // if (form.getValues("completedAt")) {
-    //   form.setValue("completedAt", undefined);
-    // } else {
-    //   const currentDate = new Date();
-    //   form.setValue("completedAt", currentDate);
-    // }
   };
 
   useEffect(() => {
@@ -145,7 +127,7 @@ export default function FormProduct({
         form.setValue("name", response.name);
         form.setValue("description", response.description);
         form.setValue("linkRepo", response.linkRepo);
-        form.setValue("image", response.image);
+        setImageLink(response.image);
         form.setValue("isPrivate", response.isPrivate);
         form.setValue("isShow", response.isShow);
         form.setValue("started", response.started);
@@ -163,65 +145,69 @@ export default function FormProduct({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
-        <ReactHookFormTextInput form={form} name="name" label="Project Name" />
-        <ReactHookFormTextInput
-          form={form}
-          name="description"
-          label="Description"
-        />
-        <ReactHookFormTextInput
-          form={form}
-          name="linkRepo"
-          label="Repository Link"
-        />
-        {/* <ReactHookFormTextInput form={form} name="image" label="Image URL" /> */}
+      <section className="w-full flex gap-6 flex-col-reverse">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4 w-full">
+          <ReactHookFormTextInput
+            form={form}
+            name="name"
+            label="Project Name"
+          />
+          <ReactHookFormTextInput
+            form={form}
+            name="description"
+            label="Description"
+          />
+          <ReactHookFormTextInput
+            form={form}
+            name="linkRepo"
+            label="Repository Link"
+          />
+          <ReactHookFormFileInput
+            form={form}
+            name="image"
+            label="Image"
+            onFileChange={handleFileChange}
+          />
+          <ReactHookFormBooleanInput
+            form={form}
+            name="isPrivate"
+            label="Private Repository"
+          />
+          <ReactHookFormBooleanInput
+            form={form}
+            name="isShow"
+            label="Show on Portfolio"
+            selectItemLabels={{ true: "Show", false: "Hide" }}
+          />
+          <ReactHookFormDateInput
+            form={form}
+            name="started"
+            label="Start Date"
+          />
+          <ReactHookFormDateInput form={form} name="ended" label="End Date" />
+          <Button type="button" onClick={toggleCompletedProject}>
+            {isCompleted ? "Make Incomplete" : "Make Complete"}
+          </Button>
 
-        <FormField
-          control={form.control}
-          name="image"
-          render={({}) => (
-            <FormItem>
-              <FormLabel>Image</FormLabel>
-              <FormControl>
-                <FileInput
-                  onChange={(file) => {
-                    if (file) {
-                      form.setValue("image", file);
-                    }
-                  }}
-                  accept="image/*"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <AlertError message={error?.message ?? ""} />
+          <AlertSuccess message={data?.message ?? ""} />
 
-        <ReactHookFormBooleanInput
-          form={form}
-          name="isPrivate"
-          label="Private Repository"
-        />
-        <ReactHookFormBooleanInput
-          form={form}
-          name="isShow"
-          label="Show on Portfolio"
-          selectItemLabels={{ true: "Show", false: "Hide" }}
-        />
-        <ReactHookFormDateInput form={form} name="started" label="Start Date" />
-        <ReactHookFormDateInput form={form} name="ended" label="End Date" />
-        <Button type="button" onClick={toggleCompletedProject}>
-          {isCompleted ? "Make Incomplete" : "Make Complete"}
-        </Button>
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? "Loading..." : "Submit"}
+          </Button>
+        </form>
 
-        <AlertError message={error?.message ?? ""} />
-        <AlertSuccess message={data?.message ?? ""} />
-
-        <Button type="submit" disabled={isPending} className="w-full">
-          {isPending ? "Loading..." : "Submit"}
-        </Button>
-      </form>
+        {(previewImage || imageLink) && (
+          <section className={imageLink || previewImage ? "w-full" : "hidden"}>
+            <img
+              src={previewImage || imageLink || "/vercel.svg"}
+              alt="Preview"
+            />
+          </section>
+        )}
+      </section>
     </Form>
   );
 }
