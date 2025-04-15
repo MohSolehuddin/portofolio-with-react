@@ -67,6 +67,7 @@ model Portfolio {
   description String
   isPrivate Boolean @default(false)
   linkRepo String?
+  imageId String?
   image String?
   isShow Boolean @default(true)
   completedAt DateTime?
