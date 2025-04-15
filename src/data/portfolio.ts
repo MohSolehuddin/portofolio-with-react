@@ -62,13 +62,18 @@ export const updatePortfolio = async (
   });
 };
 
-export const updatePortfolioImage = async (id: string, image: string) => {
+export const updatePortfolioImage = async (
+  id: string,
+  image: string,
+  imageId: string
+) => {
   return await db.portfolio.update({
     where: {
       id,
     },
     data: {
       image,
+      imageId,
     },
   });
 };
