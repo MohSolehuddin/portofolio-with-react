@@ -117,6 +117,16 @@ model WorkExperience {
   deletedAt DateTime?
 }
 
+model Certification {
+  id String @id @default(uuid())
+  from String
+  YearOfCertificate DateTime
+  DurationOfTrainingCompletionInWeek Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+}
+
 model Article {
   id String @id @default(uuid())
 
