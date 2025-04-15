@@ -111,7 +111,8 @@ export async function POST(req: Request) {
         const uploadedImage = await uploadToCloudinary(buffer);
 
         imageUrl = uploadedImage.secure_url as string;
-        await updatePortfolioImage(createdPortfolio.id, imageUrl);
+        const imageId = uploadedImage.public_id as string;
+        await updatePortfolioImage(createdPortfolio.id, imageUrl, imageId);
       }
     })();
 
