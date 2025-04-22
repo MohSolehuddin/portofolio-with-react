@@ -10,8 +10,8 @@ export default function Page() {
   return (
     <ContainerHome>
       <HeroSection />
-      <Products />
       <MySkill />
+      <Products />
       <Contact />
     </ContainerHome>
   );
