@@ -21,7 +21,7 @@ export default function HeroSection() {
   const width = useWindowWidth();
 
   return (
-    <div className="md:relative z-10 h-screen flex flex-col items-center xl:justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
+    <div className="md:relative z-10 min-h-screen flex flex-col items-center xl:justify-center xl:items-start xl:pl-36 rounded-3xl p-10 shadow-neumorphic">
       <motion.div
         style={{ y: heroSectionY }}
         initial={{ opacity: 0, x: -60 }}
@@ -32,13 +32,13 @@ export default function HeroSection() {
           width={300}
           height={300}
           alt="Moh Solehuddin"
-          className="rounded-full shadow-neumorphic max-xl:w-[200px] max-xl:h-[200px]"
+          className="rounded-full shadow-neumorphic max-md:w-[150px] max-md:h-[150px] max-xl:w-[200px] max-xl:h-[200px]"
         />
       </motion.div>
 
       <motion.div
         style={{ y: heroSectionY, opacity: textOpacity }}
-        className="xl:absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic p-12 rounded-xl dark:bg-black/20 bg-light/30 max-xl:bg-inherit max-xl:dark:bg-inherit">
+        className="xl:absolute flex flex-col items-center xl:items-start xl:ml-72 shadow-neumorphic max-md:p-4 md:p-12 rounded-xl dark:bg-black/20 bg-light/30 max-xl:bg-inherit max-xl:dark:bg-inherit">
         <motion.h1
           className="max-xl:text-2xl xl:text-5xl font-bold dark:text-light text-navy drop-shadow-lg shadow-accent"
           initial={{ opacity: 0, y: 30 }}
@@ -64,7 +64,7 @@ export default function HeroSection() {
           <SocialMedia />
         </section>
         <motion.div
-          className="max-xl:text-sm text-xl dark:text-light/90 text-navy/90 max-xl:mt-2 mt-6 max-md:px-6 max-xl:px-40 max-xl:text-center flex flex-col max-xl:gap-2 gap-6"
+          className="max-xl:text-base text-xl dark:text-light/90 text-navy/90 max-xl:mt-2 mt-6 max-md:px-6 max-xl:px-40 max-xl:text-center flex flex-col max-xl:gap-2 gap-6"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}>
@@ -97,7 +97,7 @@ export default function HeroSection() {
           />
         </motion.div>
         <motion.section
-          className="mt-6 flex gap-12 mb-6 bg-navy/50 rounded-xl p-4"
+          className="mt-6 flex max-md:gap-4 max-xl:gap-8 xl:gap-12 mb-6 bg-navy/50 rounded-xl p-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6 }}>

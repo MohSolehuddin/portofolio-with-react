@@ -43,7 +43,7 @@ function ProductsContent() {
 
   return (
     <section className="min-h-screen flex flex-col justify-center items-center gap-12">
-      <h3 className="text-5xl text-navy dark:text-light font-extrabold text-center">
+      <h3 className="max-xl:text-4xl text-5xl text-navy dark:text-light font-extrabold text-center">
         My Recent Projects
       </h3>
       <section className="z-40 w-full flex flex-wrap justify-center items-center gap-6">

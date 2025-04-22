@@ -25,49 +25,53 @@ const Product = memo(function Product({
     [theme]
   );
 
-  const startedDate = new Date(started).toLocaleString(undefined, {
+  const startedDate = new Date(started).toLocaleDateString(undefined, {
     dateStyle: "medium",
   });
 
-  const endedDate = new Date(ended).toLocaleString(undefined, {
+  const endedDate = new Date(ended).toLocaleDateString(undefined, {
     dateStyle: "medium",
   });
 
   return (
-    <section className="w-[450px] h-[450px] relative">
+    <section className="w-full max-w-sm sm:max-w-md">
       <SpotlightCard
-        className="h-[450px] w-[450px] p-0 absolute top-0 left-0"
+        className="w-full h-full p-0 relative overflow-hidden"
         spotlightColor={spotlightColor}>
         <Image
           src={image ?? "/solehuddin.webp"}
           loader={() => image ?? "/solehuddin.webp"}
-          alt="logo"
-          width={540}
-          height={300}
-          className="object-cover w-[450px] h-[300px]"
+          alt={name}
+          width={800}
+          height={450}
+          className="object-cover w-full aspect-video"
         />
-        <section className="relative px-4 pt-2 bg-light/30 dark:bg-navy/50 w-[450px] h-[150px]">
-          <h3>{name}</h3>
-          {description && (
-            <p>
-              {description?.slice(0, 100) +
-                (description?.length > 100 ? "..." : "")}
-            </p>
-          )}
-          <section className="absolute left-0 bottom-2 w-full px-4 flex justify-between items-end">
-            {linkRepo && !isPrivate && (
-              <Button>
-                <Link href={linkRepo}>GitHub</Link>
+
+        <section className="relative px-4 py-3 bg-light/30 dark:bg-navy/50 backdrop-blur-md">
+          <h3 className="text-lg font-bold line-clamp-1">{name}</h3>
+          <p className="text-sm mt-1 line-clamp-3 h-[4rem]">
+            {description || "No description..."}
+          </p>
+
+          <section className="mt-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+            <div className="flex gap-2 items-center text-xs text-muted-foreground">
+              <span>{startedDate}</span>
+              <span>-</span>
+              <span>{endedDate}</span>
+            </div>
+
+            <div className="flex gap-2">
+              {linkRepo && !isPrivate && (
+                <Button size="sm" variant="outline">
+                  <Link href={linkRepo} target="_blank">
+                    GitHub
+                  </Link>
+                </Button>
+              )}
+              <Button size="sm">
+                <Link href="#">Show details</Link>
               </Button>
-            )}
-            <Button>
-              <Link href="#">Show details</Link>
-            </Button>
-            <section className="flex gap-2">
-              <p>{startedDate}</p>
-              <p> - </p>
-              <p>{endedDate}</p>
-            </section>
+            </div>
           </section>
         </section>
       </SpotlightCard>

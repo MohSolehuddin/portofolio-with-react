@@ -3,6 +3,7 @@
 import Aurora from "@/components/Aurora/Aurora";
 import DecryptedText from "@/components/DecryptedText/DecryptedText";
 import SplashCursor from "@/components/SplashCursor/SplashCursor";
+import { useWindowWidth } from "@/hooks/useWindowWidth";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 
@@ -24,22 +25,28 @@ export default function ContainerHome({ children }: { children: ReactNode }) {
     setColorStops(["#fff", "#fff", "#fbfbfb"]);
   }, [theme]);
 
+  const width = useWindowWidth();
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background md:px-40 bg-light dark:bg-dark bg-cover bg-top">
-      <section className="absolute w-screen h-screen z-0 top-0 left-0 -mt-12">
-        {theme == "dark" ? (
-          <Aurora colorStops={colorStops} />
-        ) : (
-          <Aurora
-            colorStops={colorStops}
-            amplitude={0.3}
-            blend={0.9}
-            speed={1}
-            time={1000}
-          />
-        )}
-      </section>
-      <SplashCursor />
+      {width > 768 && (
+        <>
+          <section className="absolute w-screen h-screen z-0 top-0 left-0 -mt-12">
+            {theme == "dark" ? (
+              <Aurora colorStops={colorStops} />
+            ) : (
+              <Aurora
+                colorStops={colorStops}
+                amplitude={0.3}
+                blend={0.9}
+                speed={1}
+                time={1000}
+              />
+            )}
+          </section>
+          <SplashCursor />
+        </>
+      )}
 
       <motion.div
         className="fixed max-md:hidden -left-52 top-1/2 -mt-16 -translate-y-1/2 font-bold tracking-wider dark:text-light/20 text-navy/20 text-9xl whitespace-nowrap z-50 shadow-neumorphic"

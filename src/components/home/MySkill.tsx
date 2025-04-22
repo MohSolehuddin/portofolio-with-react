@@ -206,12 +206,12 @@ export default function MySkill() {
   ];
 
   return (
-    <section className="h-screen p-6 flex justify-center items-center flex-col">
-      <h3 className="text-5xl font-extrabold mb-12 text-center text-navy dark:text-white">
+    <section className="min-h-screen max-md:p-1 max-xl:p-4 p-6 flex justify-center items-center flex-col">
+      <h3 className="max-xl:text-4xl text-5xl font-extrabold mb-12 text-center text-navy dark:text-white">
         My Skill Set
       </h3>
 
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap max-md:gap-1 max-xl:gap-1 gap-2 justify-center">
         {techStack.map((tech) => (
           <Image
             width={100}
@@ -220,7 +220,7 @@ export default function MySkill() {
             loader={() => tech.logo}
             src={tech.logo}
             alt={tech.name}
-            className="w-auto h-10"
+            className="max-md:h-6 w-auto h-10"
           />
         ))}
       </div>

@@ -35,15 +35,15 @@ export default function Contact() {
     form.reset();
   };
   return (
-    <section className="flex flex-col justify-center items-center h-screen">
-      <h3 className="text-5xl text-navy dark:text-light font-extrabold">
+    <section className="flex flex-col justify-center items-center min-h-screen">
+      <h3 className="max-xl:text-4xl text-5xl text-navy dark:text-light font-extrabold">
         Contact me!
       </h3>
 
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 w-1/3">
+          className="space-y-4 max-md:w-full max-md:px-4 max-xl:w-2/3 w-1/3">
           <ReactHookFormTextInput
             form={form}
             name="from"
@@ -66,7 +66,9 @@ export default function Contact() {
 
           <AlertError message={error} />
           <AlertSuccess message={success} />
-          <Button>Send message</Button>
+          <Button className="w-full h-12 font-bold text-base">
+            Send message
+          </Button>
         </form>
       </Form>
     </section>
