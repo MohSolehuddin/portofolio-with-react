@@ -67,5 +67,22 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
+    font-family: "Winky Rough", sans-serif;
   }
+}
+
+@font-face {
+  font-family: "Winky Rough";
+  src: url("/fonts/Winky_Rough/WinkyRough-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Winky Rough";
+  src: url("/fonts/Winky_Rough/WinkyRough-Italic-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
 }
