@@ -17,6 +17,7 @@ const Product = memo(function Product({
   isPrivate,
   ended,
 }: z.infer<typeof PortfolioResponseSchema>) {
+  console.log(isPrivate, linkRepo, !isPrivate && linkRepo);
   const { theme } = useTheme();
 
   const spotlightColor = useMemo(
@@ -61,9 +62,11 @@ const Product = memo(function Product({
             </div>
 
             <div className="flex gap-2">
-              {linkRepo && !isPrivate && (
+              {!isPrivate && (
                 <Button size="sm" variant="outline">
-                  <Link href={linkRepo} target="_blank">
+                  <Link
+                    href={linkRepo ?? "https://github.com/MohSolehuddin"}
+                    target="_blank">
                     GitHub
                   </Link>
                 </Button>
