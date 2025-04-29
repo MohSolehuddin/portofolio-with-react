@@ -42,7 +42,9 @@ function ProductsContent() {
     );
 
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center gap-12">
+    <section
+      className="min-h-screen flex flex-col justify-center items-center gap-12"
+      id="projects">
       <h3 className="max-xl:text-4xl text-5xl text-navy dark:text-light font-extrabold text-center">
         My Recent Projects
       </h3>

@@ -32,7 +32,7 @@ export default function HeroSection() {
           width={300}
           height={300}
           alt="Moh Solehuddin"
-          className="rounded-full shadow-neumorphic max-md:w-[150px] max-md:h-[150px] max-xl:w-[200px] max-xl:h-[200px]"
+          className="rounded-full shadow-neumorphic max-md:w-[150px] max-md:h-[150px] max-xl:w-[200px] max-xl:h-[200px] handsome-cursor"
         />
       </motion.div>
 
@@ -105,13 +105,24 @@ export default function HeroSection() {
           <ProjectCompleted />
           <ProjectOngoing />
         </motion.section>
-        <Magnet>
-          <a
-            href="https://drive.google.com/file/d/15XGcxQzN52bkJ4JrLYSzM7PCxqaHkPRY/view?usp=drive_link"
-            about="_blank">
-            <Button>Download CV</Button>
-          </a>
-        </Magnet>
+        <section className="flex gap-4">
+          <Magnet>
+            <a
+              href="https://drive.google.com/file/d/15XGcxQzN52bkJ4JrLYSzM7PCxqaHkPRY/view?usp=drive_link"
+              aria-label="Download CV Moh Solehuddin"
+              about="_blank">
+              <Button>Download CV</Button>
+            </a>
+          </Magnet>
+          <Magnet>
+            <a
+              href="https://legacy-msytc.vercel.app"
+              aria-label="See Legacy Portfolio Moh Solehuddin"
+              about="_blank">
+              <Button>Legacy Portfolio</Button>
+            </a>
+          </Magnet>
+        </section>
       </motion.div>
     </div>
   );
