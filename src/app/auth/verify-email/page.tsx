@@ -1,4 +1,4 @@
-"use client"; // Pastikan ini ada di atas komponen
+"use client";
 
 import AlertSuccess from "@/components/alerts/AlertSuccess";
 import { AlertError } from "@/components/alerts/error";
