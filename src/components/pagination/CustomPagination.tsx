@@ -63,7 +63,11 @@ export function CustomPagination({
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious onClick={handelPrevious} />
+          <PaginationPrevious
+            onClick={handelPrevious}
+            aria-label="Go to previous page"
+            href="#projects"
+          />
         </PaginationItem>
 
         {getPageNumbers().map((page, index) => (
@@ -73,6 +77,8 @@ export function CustomPagination({
             ) : (
               <PaginationLink
                 onClick={() => setCurrentPage(page)}
+                href="#projects"
+                aria-label={`Go to page ${page}`}
                 isActive={currentPage === page}>
                 {page}
               </PaginationLink>
@@ -81,7 +87,11 @@ export function CustomPagination({
         ))}
 
         <PaginationItem>
-          <PaginationNext onClick={handleNext} />
+          <PaginationNext
+            onClick={handleNext}
+            aria-label="Go to next page"
+            href="#projects"
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
